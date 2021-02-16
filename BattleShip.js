@@ -12,10 +12,10 @@ class Gameboard {
         
         //implicit dictionary/object creation
         for (let i = 0; i < arr.length; i++) {
-           tempBoard[i+1] = 'NA';
+           m_tempBoard[i+1] = 'NA';
 
            if(i === 9 && run !== 10){
-               m_board[arr[run]] = tempBoard;
+               m_board[arr[run]] = m_tempBoard;
                run++;
                i = 0;
            }
