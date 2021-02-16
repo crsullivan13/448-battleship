@@ -91,4 +91,3 @@ class Fleet{
 
 //let Ship1 = Fleet(6)
 let board = new Gameboard(6);
-//console.log(board.m_board);
