@@ -6,13 +6,33 @@ class Gameboard {
     constructor (numShips) {
         let m_numOfSchips = numShips
         let m_board = {} //creates a dictionary for the board
+        let m_tempBoard = {}; //temp that is put into the board after filled
+        let arr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']; 
+        let run = 0; //used for janky if statement in for loop to make it run another round
+        
+        //implicit dictionary/object creation
+        for (let i = 0; i < arr.length; i++) {
+           tempBoard[i+1] = 'NA';
+
+           if(i === 9 && run !== 10){
+               m_board[arr[run]] = tempBoard;
+               run++;
+               i = 0;
+           }
+        }
+
+        /*
         m_board['A'] = {'1' : 'NA', '2' : 'NA', '3' : 'NA', '4' : 'NA', '5' : 'NA',
         '6' : 'NA', '7' : 'NA', '8' : 'NA', '9' : 'NA', '10' : 'NA'} // 'NA' woudl be no ship, 'S' means a ship is there
         m_board['B'] = {'1' : 'NA', '2' : 'NA', '3' : 'NA', '4' : 'NA', '5' : 'NA',
         '6' : 'NA', '7' : 'NA', '8' : 'NA', '9' : 'NA', '10' : 'NA'}
         m_board['C'] = {'1' : 'NA', '2' : 'NA', '3' : 'NA', '4' : 'NA', '5' : 'NA',
         '6' : 'NA', '7' : 'NA', '8' : 'NA', '9' : 'NA', '10' : 'NA'}
+        */
         //This would go all the way down to J. I'm not sure if there was an implicit way to do this
+
+        console.log(m_board);
+
     }
 
     /**
@@ -69,4 +89,6 @@ class Fleet{
     }
 }
 
-let Ship1 = Fleet(6)
+//let Ship1 = Fleet(6)
+let board = new Gameboard(6);
+//console.log(board.m_board);
