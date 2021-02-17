@@ -3,36 +3,60 @@
  */
 
 class Gameboard {
+    m_testBoard = new Array(10);
     constructor (numShips) {
-        let m_numOfSchips = numShips
-        let m_board = {} //creates a dictionary for the board
-        let m_tempBoard = {}; //temp that is put into the board after filled
+        this.m_numOfShips = numShips;
         let arr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']; 
-        let run = 0; //used for janky if statement in for loop to make it run another round
-        
-        //implicit dictionary/object creation
-        for (let i = 0; i < arr.length; i++) {
-           m_tempBoard[i+1] = 'NA';
 
-           if(i === 9 && run !== 10){
-               m_board[arr[run]] = m_tempBoard;
-               run++;
-               i = 0;
-           }
+        for (let i = 0; i < 10; i++){
+            this.m_testBoard[i] = new Array(11);
         }
 
-        /*
-        m_board['A'] = {'1' : 'NA', '2' : 'NA', '3' : 'NA', '4' : 'NA', '5' : 'NA',
-        '6' : 'NA', '7' : 'NA', '8' : 'NA', '9' : 'NA', '10' : 'NA'} // 'NA' woudl be no ship, 'S' means a ship is there
-        m_board['B'] = {'1' : 'NA', '2' : 'NA', '3' : 'NA', '4' : 'NA', '5' : 'NA',
-        '6' : 'NA', '7' : 'NA', '8' : 'NA', '9' : 'NA', '10' : 'NA'}
-        m_board['C'] = {'1' : 'NA', '2' : 'NA', '3' : 'NA', '4' : 'NA', '5' : 'NA',
-        '6' : 'NA', '7' : 'NA', '8' : 'NA', '9' : 'NA', '10' : 'NA'}
-        */
-        //This would go all the way down to J. I'm not sure if there was an implicit way to do this
+        for (let i = 0; i < 10; i++){
+            for (let j = 0; j < 11; j++){
+                if(j != 0){
+                    this.m_testBoard[i][j] = 'NA';
+                } else {
+                    this.m_testBoard[i][j] = arr[i];
+                }
+            }
+        }
 
-        console.log(m_board);
+        //console.log(this.m_testBoard); for testing
+    }
 
+
+    /**
+     * @pre Gameboard must be created, must not overlap other ship and must be within board
+     * @param coord starting coord of the ship
+     * @param ship must pass in ship to be placed
+     * @post returns true if ship placed, false if pre not met and prints error to console
+     */
+    placeShip(ship, coord, orientation) {
+        let arr = coord.split(' ');
+        let numCoord = Number(arr[1]);
+        let counter = 0;
+
+        if((9- numCoord - ship.getSize()) >= 0) {
+            while(this.m_testBoard[counter][0] !== arr[0]){
+                counter++;
+            }
+
+            for (let i = 0; i < ship.getSize(); i++){
+                if(this.m_testBoard[counter][numCoord + i] === 'S'){
+                    console.log("Invalid ship placement: Overlap")
+                    return [false, null]
+                }
+            }
+
+            for (let i = 0; i < ship.getSize(); i++){
+                    this.m_testBoard[counter][numCoord + i] = 'S';
+            }
+        } else {
+            console.log("Invalid ship placement: Off board");
+            return [false, null];
+        }
+        return [true, coord];
     }
 
     /**
@@ -40,9 +64,14 @@ class Gameboard {
      * @param position coordinates the other playes will provide
      * @post returns true if the positon holds an 'S', false otherwise, if true, calls Ship's hit function
      */
-    isAHit(position) {
-        if (m_board[position[0]][position[1]] == 'S') {
-            
+    isAHit(coord) {
+        let arr = coord.split(' ');
+        let numCoord = Number(arr[1]);
+        let counter = 0;
+        while(this.m_testBoard[counter][0] !== arr[0]){
+            counter++;
+        }
+        if (this.m_testBoard[counter][numCoord] == 'S') {            
             return true
         }
         else {
@@ -51,14 +80,16 @@ class Gameboard {
     }
 }
 
-class Fleet{
+class Ship{
+    m_size;
+    m_body = [];
+    m_health;
     constructor(size) {
-        let m_size = size
-        let m_ships = {}
-        for (let i = 1; i <= m_size; i++){
-            m_body[i] = 'O' //'O' means that there is no hit, 'X' means there is a hit
+        this.m_size = size;
+        this.m_health = size;
+        for (let i = 0; i < this.m_size; i++){
+            this.m_body[i] = 'O' //'O' means that there is no hit, 'X' means there is a hit
         }
-        let m_position = {}
     }
 
     /**
@@ -66,7 +97,7 @@ class Fleet{
      * @post returns m_size
      */
     getSize() {
-        return m_size
+        return this.m_size;
     }
 
     /**
@@ -75,8 +106,14 @@ class Fleet{
      * @param startPos starting position of ship
      * @param endPos ending position of ship
      */
-    setPosition(startPos, endPos) {
-
+    setPosition(startPos) {
+        let startArr = startPos.split(' ');
+        //let endArr = endPos.split('');
+        for (let i = 0; i < this.m_size; i++){
+            this.m_body[i] = startArr[0] + (Number(startArr[1]) + i);
+        }
+        console.log(this.m_body);
+    
     }
 
     /**
@@ -85,9 +122,25 @@ class Fleet{
      * @param marked position where m_body is to be hit
      */
     hit(marked) {
-
+        let arr = marked.split(' ');
+        
     }
 }
 
-//let Ship1 = Fleet(6)
-let board = new Gameboard(6);
+class Player {
+
+}
+
+let Ship1 = new Ship(1);
+let Ship2 = new Ship(2);
+let board = new Gameboard();
+let place = board.placeShip(Ship1, 'A 5');
+if(place[0]===true){
+    Ship1.setPosition(place[1]);
+}
+place = board.placeShip(Ship2, 'A 6');
+if(place[0]===true){
+    Ship2.setPosition(place[1]);
+}
+console.log(board.m_testBoard);
+console.log(board.isAHit('A 1'));
