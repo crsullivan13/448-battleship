@@ -40,6 +40,7 @@ class Gameboard {
      * @pre Gameboard must be created, must not overlap other ship and must be within board
      * @param coord starting coord of the ship
      * @param ship must pass in ship to be placed
+     * @param orientation must pass in either vertical or horizontal to orient ship
      * @post returns true if ship placed, false if pre not met and prints error to console
      */
     placeShip(ship, coord, orientation) {
@@ -78,7 +79,7 @@ class Gameboard {
 
     /**
      * @pre Gameboard must have battleships set out
-     * @param position coordinates the other playes will provide
+     * @param coord coordinates the other playes will provide
      * @post returns true if the positon holds an 'S', false otherwise, if true, calls Ship's hit function
      */
     isAHit(coord) {
@@ -87,7 +88,7 @@ class Gameboard {
         const colNum = Number(arr[1]) - 1;
 
         if (this.m_testBoard[mapper[row]][colNum] == 'S') {    
-          this.m_testBoard[mapper[row]][colNum] = 'O'
+          this.m_testBoard[mapper[row]][colNum] = 'X'
           return true
         } else {
           return false
@@ -135,15 +136,15 @@ class Ship{
      * @pre gameboard must be set up
      * @post positions the ship on gameboard
      * @param startPos starting position of ship
-     * @param endPos ending position of ship
      */
     setPosition(startPos) {
         let startArr = startPos.split(' ');
-        //let endArr = endPos.split('');
         for (let i = 0; i < this.m_size; i++){
-            this.m_body[i] = startArr[0] + (Number(startArr[1]) + i);
+            this.m_body[i] = startArr[0] + ' ' + (Number(startArr[1]) + i);
         }
-        console.log(this.m_body);
+
+        //maybe return m_body
+        //console.log(this.m_body);
     
     }
 
@@ -153,9 +154,21 @@ class Ship{
      * @param marked position where m_body is to be hit
      */
     hit(marked) {
-        let arr = marked.split(' ');
-        
+        for (let i = 0; i < this.m_size; i++) {
+            if(this.m_body[i] === marked) {
+                this.m_body[i] = 'X';
+                this.m_health--;
+                return true;
+            }
+        }
+        return false;
     }
+
+    /*part of my fleet idea
+    *checkCoords(coord) {
+        return m_body.includes(coord);
+    }
+    */
 }
 
 class Player {
@@ -163,12 +176,28 @@ class Player {
         this.m_name = name;
         this.m_numShips = numOfShips;
         this.m_otherPlayerBoard = new Gameboard(m_numShips)
+        /* not sure how we want to actually check if the shot hits any of the ships that the player has
+        * maybe have all of the placed ships in an array and then itterate through checking if one of them has the correct coords
+        * if we do it this way then we will need some sort of checkHit inside of the player i think in order to iterate through the ships
+        * maybe this.m_fleet = [], then when a ship is placed we (in the main game loop) add the ship object to the fleet
+        */
     }
+
+    /*This is just an idea to discuss in meeting or imp if we think its a good idea
+    * 
+    checkFleet(coord) {
+        for (let i = 0; i < m_numShips) {
+            if(m_fleet[i].Some method to check for coords inside of the ships body) {
+                return m_fleet[i] this will give back the ship object with the coords in it, from here we can call the hit methods or place a miss
+            }
+        }
+    }
+    */
 
     /**
      * @pre None
      * @post Sets the battleship of other player. Basically each player plays with their own boards, set up by the other. They just take turns
-     */
+     */ 
     setBattleShips() {
         console.log("Welcome " + this.m_name + "! Let's have the other player set up their battleship!\n")
 
@@ -177,11 +206,16 @@ class Player {
             for (let pos = 1; pos <= i; pos++) {
                 //The prompting for a choice will change depending on how we decide to do it
                 let choice = window.prompt("For ship #" + i + ", which fills " + i + " squares, what is the position for square #" + pos +": ")
+                //need to add prompt for either vertical or horizontal
+                //need to add checks to make sure the input is in the right format (what is the format we want coming in?)
+                //I think we can remove the checks in this method that check if the placement is valid as that is done in the gameboard class
+                //call the gameBoard place ship and if that's true then call the ships which returns the body and places it in the fleet
                 let valid = false
                 while (valid === false) {
                     if (pos === 1){
                         /*
-                        *calls Ship's or Gameboard's position function.
+                        * calls Ship's or Gameboard's position function.
+                        * 
                         */
                     prevChoice = choice
                     valid = true
@@ -196,6 +230,7 @@ class Player {
                         if (Math.abs(alert(prevChoice.charCodeAt(0) - choice.charCodeAt(0))) === 1 &&  Math.abs(pre - ch) === 1) {
                             /**
                              * calls Ship's or Gameboard's position functions.
+                             * I think we'll want to call the gameboard which will then call the ships if it works
                              */
                             valid = true
                         }
