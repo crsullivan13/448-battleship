@@ -1,30 +1,40 @@
 /**
  * THIS IS ALL JUST BRAINSTORMING!! FEEL FREE TO REJECT OR IMPROVE ON THE IDEAS
  */
+const mapper = {
+    A: 0,
+    B: 1,
+    C: 2,
+    D: 3,
+    E: 4,
+    F: 5,
+    G: 6,
+    H: 7,
+    I: 8,
+    J: 9
+}//1-10 to A-J
 
 class Gameboard {
-    m_testBoard = new Array(10);
     constructor (numShips) {
         this.m_numOfShips = numShips;
-        let arr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']; 
-
+        this.m_testBoard = new Array(10);
+        
         for (let i = 0; i < 10; i++){
-            this.m_testBoard[i] = new Array(11);
+            this.m_testBoard[i] = new Array(10);
         }
 
         for (let i = 0; i < 10; i++){
-            for (let j = 0; j < 11; j++){
-                if(j != 0){
-                    this.m_testBoard[i][j] = 'NA';
-                } else {
-                    this.m_testBoard[i][j] = arr[i];
-                }
+            for (let j = 0; j < 10; j++){
+                this.m_testBoard[i][j] = 'NA';
             }
         }
 
         //console.log(this.m_testBoard); for testing
     }
 
+    checkOutOfBound(colNum, ship) {
+        return (10 - colNum - ship.getSize()) < 0;
+    } //Check if ship out of bound or not
 
     /**
      * @pre Gameboard must be created, must not overlap other ship and must be within board
@@ -34,24 +44,31 @@ class Gameboard {
      */
     placeShip(ship, coord, orientation) {
         let arr = coord.split(' ');
-        let numCoord = Number(arr[1]);
-        let counter = 0;
+        const row = arr[0];
+        const colNum = Number(arr[1]) - 1;
 
-        if((9- numCoord - ship.getSize()) >= 0) {
-            while(this.m_testBoard[counter][0] !== arr[0]){
-                counter++;
+        if(!checkOutOfBound){
+          for (let i = 0; i < ship.getSize(); i++){
+            // whether a ship is already there on the coord
+            if (orientation === 'vertical') {
+              if(this.m_testBoard[mapper[row] + i][colNum] === 'S'){
+                console.log("Invalid ship placement: Overlap")
+                return [false, null]
+              }
+            } else if(this.m_testBoard[mapper[row]][colNum + i] === 'S'){
+              console.log("Invalid ship placement: Overlap")
+              return [false, null]
             }
+          }
 
-            for (let i = 0; i < ship.getSize(); i++){
-                if(this.m_testBoard[counter][numCoord + i] === 'S'){
-                    console.log("Invalid ship placement: Overlap")
-                    return [false, null]
-                }
+          for (let i = 0; i < ship.getSize(); i++){
+            if (orientation === 'vertical') {
+              this.m_testBoard[mapper[row] + i][colNum] = 'S';
+            } else {
+              this.m_testBoard[mapper[row]][colNum + i] = 'S';
             }
-
-            for (let i = 0; i < ship.getSize(); i++){
-                    this.m_testBoard[counter][numCoord + i] = 'S';
-            }
+            
+          }
         } else {
             console.log("Invalid ship placement: Off board");
             return [false, null];
@@ -65,17 +82,15 @@ class Gameboard {
      * @post returns true if the positon holds an 'S', false otherwise, if true, calls Ship's hit function
      */
     isAHit(coord) {
-        let arr = coord.split(' ');
-        let numCoord = Number(arr[1]);
-        let counter = 0;
-        while(this.m_testBoard[counter][0] !== arr[0]){
-            counter++;
-        }
-        if (this.m_testBoard[counter][numCoord] == 'S') {            
-            return true
-        }
-        else {
-            return false
+        const arr = coord.split(' ');
+        const row = arr[0];
+        const colNum = Number(arr[1]) - 1;
+
+        if (this.m_testBoard[mapper[row]][colNum] == 'S') {    
+          this.m_testBoard[mapper[row]][colNum] = 'O'
+          return true
+        } else {
+          return false
         }
     }
 
@@ -84,15 +99,15 @@ class Gameboard {
      * @post Iterates through gameboard and if there are no more 'S', then it returns true, false otherwise
      */
     checkIfAllHit() {
-        let lost = true
-        for (let i = 0; i < 10; i++){
-            for (let j = 0; j < 11; j++){
-                if (this.m_testBoard[i][j] == 'S'){
-                    lost = false
-                }
-            }
-        }
-        return lost
+      let lost = true
+      for (let i = 0; i < 10; i++){
+          for (let j = 0; j < 10; j++){
+              if (this.m_testBoard[i][j] === 'S'){
+                  lost = false
+              }
+          }
+      }
+      return lost
     }
 }
 
@@ -266,4 +281,11 @@ while(!Player1.hasWon() || !PLayer2.hasWon()) {
         //Are we showing Player1's board here so they can see where they've been hit?
         Player2.takeATurn()
     }
+}
+
+//Game End Message
+if (Player1.hasWon()) {
+  console.log('congrats player1')
+} else {
+  console.log('congrats player2')
 }
