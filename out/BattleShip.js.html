@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: BattleShip.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: BattleShip.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * THIS IS ALL JUST BRAINSTORMING!! FEEL FREE TO REJECT OR IMPROVE ON THE IDEAS
  */
 const mapper = {
@@ -23,12 +51,12 @@ class Gameboard {
         this.m_numOfShips = numShips;
         this.m_testBoard = new Array(10);
         
-        for (let i = 0; i < 10; i++){
+        for (let i = 0; i &lt; 10; i++){
             this.m_testBoard[i] = new Array(10);
         }
 
-        for (let i = 0; i < 10; i++){
-            for (let j = 0; j < 10; j++){
+        for (let i = 0; i &lt; 10; i++){
+            for (let j = 0; j &lt; 10; j++){
                 this.m_testBoard[i][j] = 'NA';
             }
         }
@@ -45,7 +73,7 @@ class Gameboard {
 
         //This needs to also check vertically I think
 
-        return (10 - colNum - ship.getSize()) < 0;
+        return (10 - colNum - ship.getSize()) &lt; 0;
     } //Check if ship out of bound or not
 
     /**
@@ -61,7 +89,7 @@ class Gameboard {
         const colNum = Number(arr[1]) - 1;
 
         if(!checkOutOfBound){
-          for (let i = 0; i < ship.getSize(); i++){
+          for (let i = 0; i &lt; ship.getSize(); i++){
             // whether a ship is already there on the coord
             if (orientation === 'vertical') {
               if(this.m_testBoard[mapper[row] + i][colNum] === 'S'){
@@ -74,7 +102,7 @@ class Gameboard {
             }
           }
 
-          for (let i = 0; i < ship.getSize(); i++){
+          for (let i = 0; i &lt; ship.getSize(); i++){
             if (orientation === 'vertical') {
               this.m_testBoard[mapper[row] + i][colNum] = 'S';
             } else {
@@ -112,8 +140,8 @@ class Gameboard {
      */
     checkIfAllHit() {
       let lost = true
-      for (let i = 0; i < 10; i++){
-          for (let j = 0; j < 10; j++){
+      for (let i = 0; i &lt; 10; i++){
+          for (let j = 0; j &lt; 10; j++){
               if (this.m_testBoard[i][j] === 'S'){
                   lost = false
               }
@@ -136,7 +164,7 @@ class Ship{
     constructor(size) {
         this.m_size = size;
         this.m_health = size;
-        for (let i = 0; i < this.m_size; i++){
+        for (let i = 0; i &lt; this.m_size; i++){
             this.m_body[i] = 'O' //'O' means that there is no hit, 'X' means there is a hit
         }
     }
@@ -155,7 +183,7 @@ class Ship{
      */
     setPosition(startPos) {
         let startArr = startPos.split(' ');
-        for (let i = 0; i < this.m_size; i++){
+        for (let i = 0; i &lt; this.m_size; i++){
             this.m_body[i] = startArr[0] + ' ' + (Number(startArr[1]) + i);
         }
 
@@ -170,7 +198,7 @@ class Ship{
      * @returns true if this ship is hit false if not
      */
     hit(marked) {
-        for (let i = 0; i < this.m_size; i++) {
+        for (let i = 0; i &lt; this.m_size; i++) {
             if(this.m_body[i] === marked) {
                 this.m_body[i] = 'X';
                 this.m_health--;
@@ -202,7 +230,7 @@ class Player {
     /*This is just an idea to discuss in meeting or imp if we think its a good idea
     * 
     checkFleet(coord) {
-        for (let i = 0; i < m_numShips) {
+        for (let i = 0; i &lt; m_numShips) {
             if(m_fleet[i].Some method to check for coords inside of the ships body) {
                 return m_fleet[i] this will give back the ship object with the coords in it, from here we can call the hit methods or place a miss
             }
@@ -218,8 +246,8 @@ class Player {
         console.log("Welcome " + this.m_name + "! Let's have the other player set up their battleship!\n")
 
         let prevChoice = 'Z0'
-        for (let i = 1; i <= this.m_numShips; i++) {
-            for (let pos = 1; pos <= i; pos++) {
+        for (let i = 1; i &lt;= this.m_numShips; i++) {
+            for (let pos = 1; pos &lt;= i; pos++) {
                 //The prompting for a choice will change depending on how we decide to do it
                 let choice = window.prompt("For ship #" + i + ", which fills " + i + " squares, what is the position for square #" + pos +": ")
                 //need to add prompt for either vertical or horizontal
@@ -243,7 +271,7 @@ class Player {
                         pre = pareseInt(pre[1],10)
                         ch = parseInt(ch[1],10)
 
-                        if (Math.abs(alert(prevChoice.charCodeAt(0) - choice.charCodeAt(0))) === 1 &&  Math.abs(pre - ch) === 1) {
+                        if (Math.abs(alert(prevChoice.charCodeAt(0) - choice.charCodeAt(0))) === 1 &amp;&amp;  Math.abs(pre - ch) === 1) {
                             /**
                              * calls Ship's or Gameboard's position functions.
                              * I think we'll want to call the gameboard which will then call the ships if it works
@@ -340,3 +368,26 @@ if (Player1.hasWon()) {
 } else {
   console.log('congrats player2')
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Gameboard.html">Gameboard</a></li><li><a href="Ship.html">Ship</a></li></ul><h3>Global</h3><ul><li><a href="global.html#mapper">mapper</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Feb 18 2021 22:26:19 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
