@@ -17,7 +17,8 @@ const mapper = {
 class Gameboard {
     /**
      * @constructor
-     * @param {number} numShips 
+     * @description this builds each of the arrays that represent the game boards
+     * @param {number} numShips the number of ships to be played 
      */
     constructor (numShips) {
         this.m_numOfShips = numShips;
@@ -131,6 +132,7 @@ class Ship{
 
     /**
      * @constructor
+     * @description this builds each individual ship that is placed
      * @param {number} size length of the ship
      */
     constructor(size) {
@@ -188,6 +190,12 @@ class Ship{
 }
 
 class Player {
+    /**
+     * @constructor
+     * @description this creates each player
+     * @param {number} numOfShips number of ships to played
+     * @param {string} name name of the player
+     */
     constructor(numOfShips, name) {
         this.m_name = name;
         this.m_numShips = numOfShips;
@@ -211,9 +219,9 @@ class Player {
     */
 
     /**
-     * @pre None
-     * @post Sets the battleship of other player. Basically each player plays with their own boards, set up by the other. They just take turns
-     */ 
+     * @description allows other player to place ships, I.E. player1's board is in player2's class
+     * @returns true if ship placed
+     * */
     setBattleShips() {
         console.log("Welcome " + this.m_name + "! Let's have the other player set up their battleship!\n")
 
@@ -262,8 +270,8 @@ class Player {
     }
 
     /**
-     * @pre Player's gameboard and ships must be set up
-     * @post prompts player for a position and calls Gameboard's isAHit(), then calls checkIfAllHit()
+     * @description prompts player for a position and calls Gameboard's isAHit(), then calls checkIfAllHit()
+     * @returns returns a message that is then displayed to the player, message says what there hit was and if they have won that is also printed out
      */
     takeATurn() {
         //The prompting for a choice will change depending on how we decide to do it
@@ -280,8 +288,8 @@ class Player {
     }
 
     /**
-     * @pre Game is set up and has started or about to start
-     * @post returns true if all other player's ships have been sunk
+     * @description calls the checkIfAllHit in the gameBaord class
+     * @returns true if all other player's ships have been sunk
      */
     hasWon() {
         return (this.m_otherPlayerBoard.checkIfAllHit())
