@@ -1,6 +1,7 @@
 /**
  * THIS IS ALL JUST BRAINSTORMING!! FEEL FREE TO REJECT OR IMPROVE ON THE IDEAS
  */
+const prompt = require('prompt-sync')();
 const mapper = {
     A: 0,
     B: 1,
@@ -76,7 +77,7 @@ class Gameboard {
         const row = arr[0];
         const colNum = Number(arr[1]) - 1;
 
-        if(!checkOutOfBound(ship, coord, orientation)){
+        if(!this.checkOutOfBound(ship, coord, orientation)){
           for (let i = 0; i < ship.getSize(); i++){
             // whether a ship is already there on the coord
             if (orientation === 'V' || orientation === 'v') { //I changed vertical to 'V' or 'v' in other function
@@ -214,8 +215,8 @@ class Player {
     constructor(numOfShips, name) {
         this.m_name = name;
         this.m_numShips = numOfShips;
-        this.m_otherPlayerBoard = new Gameboard(m_numShips)
-        this.m_fleet = new Array(m_numShips) //holds all the created ships
+        this.m_otherPlayerBoard = new Gameboard(this.m_numShips)
+        this.m_fleet = new Array(this.m_numShips) //holds all the created ships
         /* not sure how we want to actually check if the shot hits any of the ships that the player has
         * maybe have all of the placed ships in an array and then itterate through checking if one of them has the correct coords
         * if we do it this way then we will need some sort of checkHit inside of the player i think in order to iterate through the ships
@@ -264,8 +265,8 @@ class Player {
         console.log("Welcome " + this.m_name + "! Let's have the other player set up their battleship!\n")
         for (let i = 1; i <= this.m_numShips; i++) {
             //The prompting for a choice will change depending on how we decide to do it
-            let cochoice = window.prompt("For ship #" + i + ", what coordinate would you like it to start: ") //asks for coordinates
-            let orchoice = window.prompt("\nWhat orientation ('V' for vertical 'H' for horizontal) would you like for this ship: ") //asks for orientation
+            let cochoice = prompt("For ship #" + i + ", what coordinate would you like it to start: ") //asks for coordinates
+            let orchoice = prompt("\nWhat orientation ('V' for vertical 'H' for horizontal) would you like for this ship: ") //asks for orientation
             //need to add prompt for either vertical or horizontal
             //need to add checks to make sure the input is in the right format (what is the format we want coming in?)
             //I think we can remove the checks in this method that check if the placement is valid as that is done in the gameboard class
@@ -279,8 +280,8 @@ class Player {
                     valid = true
                 }
                 else{
-                    cochoice = window.prompt("\nTry Again! For ship #" + i + ", what coordinate would you like it to start: ")
-                    orchoice = window.prompt("\nWhat orientation('V' for vertical 'H' for horizontal) would you like for this ship: ")
+                    cochoice = prompt("\nTry Again! For ship #" + i + ", what coordinate would you like it to start: ")
+                    orchoice = prompt("\nWhat orientation('V' for vertical 'H' for horizontal) would you like for this ship: ")
                 }
                 //The following just seperates the letter and numbers in the choice i.e. B10 just becomes 10, can still access the letter
                 //let ch = cochoice.split(cochoice[0])
@@ -297,7 +298,7 @@ class Player {
      */
     takeATurn() {
         //The prompting for a choice will change depending on how we decide to do it
-        let choice = window.prompt("What's your guess?: ")
+        let choice = console.readLine("What's your guess?: ")
         if (this.m_otherPlayerBoard.isAHit(choice)){
             console.log("\nIt was a hit!\n") 
             //Have function that determines if a battleship has been sunken
@@ -337,15 +338,15 @@ class Player {
 //Let's start the game from here
 
 //This part will change depending on how we prompt the users
-let play1 = window.prompt("Player1, what is your name?: ")
-let play2 = window.prompt("Player2, what is your name? :")
+let play1 = prompt("Player1, what is your name?: ")
+let play2 = prompt("Player2, what is your name? :")
 console.log("Let's play BattleShip!\n")
 console.log("Depending on how many ships you pick, the type of ships you have will differ. You can choose between 1 to 6 ships.\n")
 console.log("If you choose 1 ship, you will get 1 ship of 1x1. If you choose 2 ships, you will get 1 ship that is 1x1 and another that is 1x2 and so on.\n")
-let numShips = window.prompt("How many ships will both players have? ")
+let numShips = prompt("How many ships will both players have? ")
 
 while (numShips <=0 || numShips > 6){
-    numShips = window.prompt('\nYou gave an invalid amount of ships. Try again: ')
+    numShips = console.readLine('\nYou gave an invalid amount of ships. Try again: ')
 }
 
 let Player1 = new Player(numShips,play1)
@@ -368,11 +369,12 @@ while(!Player1.hasWon() || !PLayer2.hasWon()) {
         Player2.takeATurn()
     }
     i++
+    if (Player1.hasWon()) {
+        console.log('\nCongratulations! ' + Player1.m_name + " has won!\n")
+      } else {
+        console.log('\nCongratulations! ' + Player2.m_name + " has won!\n")
+      }
 }
 
 //Game End Message
-if (Player1.hasWon()) {
-  console.log('\nCongratulations! ' + Player1.m_name + " has won!\n")
-} else {
-  console.log('\nCongratulations! ' + Player2.m_name + " has won!\n")
-}
+
