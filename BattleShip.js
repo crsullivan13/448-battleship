@@ -144,7 +144,6 @@ class Ship{
     m_body = [];
     m_health;
 
-
     /**
      * @constructor
      * @description this builds each individual ship that is placed
@@ -237,21 +236,20 @@ class Player {
     /**
      * @description takes a starting postions
      * @param {Ship} ship object to be "stored"
-     * @param {string} startPos starting coordinates of ship
-     * @param {string} orientation horizontal or vertical oreintation of ship
      */
-    addToFleet(ship, startPos,orientation){
-        this.m_fleet[ship.getSize()-1] = new Array(ship.getSize())
-        let variable = startPos.split(startPos[0])
-        if (orientation == 'V' || orientation == 'v'){
-            for (let i = 0; i < ship.getSize(); i++) {
-                fleet[ship.getSize()-1][i] = String.fromCharCode(startPos.charCodeAt(0) + i) + variable[1]
-            }
-        } else {
-            for (let i = 0; i < ship.getSize(); i++) {
-                fleet[ship.getSize()-1][i] = startPos[0] + String(Number(variable[1]+i))
-            }
-        }
+    addToFleet(ship){
+        this.m_fleet[ship.getSize()-1] = ship
+
+        //let variable = startPos.split(startPos[0])
+        // if (orientation == 'V' || orientation == 'v'){
+        //     for (let i = 0; i < ship.getSize(); i++) {
+        //         fleet[ship.getSize()-1][i] = String.fromCharCode(startPos.charCodeAt(0) + i) + variable[1]
+        //     }
+        // } else {
+        //     for (let i = 0; i < ship.getSize(); i++) {
+        //         fleet[ship.getSize()-1][i] = startPos[0] + String(Number(variable[1]+i))
+        //     }
+        // }
     }
 
     /**
@@ -273,7 +271,7 @@ class Player {
                 let temp = new Ship(i)
                 temp.setPosition(cochoice)
                 if (this.m_otherPlayerBoard.placeShip(temp, cochoice, orchoice)){
-                    //add the ship to m_fleet
+                    this.addToFleet(temp)
                     valid = true
                 }
                 else{
