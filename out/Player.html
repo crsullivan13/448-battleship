@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Ship</title>
+    <title>JSDoc: Class: Player</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Ship</h1>
+    <h1 class="page-title">Class: Player</h1>
 
     
 
@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>Ship<span class="signature">(size)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>Player<span class="signature">(numOfShips, name)</span><span class="type-signature"></span></h2>
         
     
 </header>
@@ -41,7 +41,7 @@
     
 
     
-    <h4 class="name" id="Ship"><span class="type-signature"></span>new Ship<span class="signature">(size)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Player"><span class="type-signature"></span>new Player<span class="signature">(numOfShips, name)</span><span class="type-signature"></span></h4>
     
 
     
@@ -49,7 +49,7 @@
 
 
 <div class="description">
-    this builds each individual ship that is placed
+    this creates each player
 </div>
 
 
@@ -85,7 +85,7 @@
 
         <tr>
             
-                <td class="name"><code>size</code></td>
+                <td class="name"><code>numOfShips</code></td>
             
 
             <td class="type">
@@ -101,7 +101,30 @@
 
             
 
-            <td class="description last">length of the ship</td>
+            <td class="description last">number of ships to played</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">name of the player</td>
         </tr>
 
     
@@ -142,7 +165,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line138">line 138</a>
+        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line199">line 199</a>
     </li></ul></dd>
     
 
@@ -198,101 +221,7 @@
     
 
     
-    <h4 class="name" id="getSize"><span class="type-signature"></span>getSize<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line149">line 149</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    returns m_size of the ship
-</div>
-
-
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="hit"><span class="type-signature"></span>hit<span class="signature">(marked)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="hasWon"><span class="type-signature"></span>hasWon<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -300,7 +229,7 @@
 
 
 <div class="description">
-    replaces 'O' with 'X' in m_body n relation to position, used to see if this ship has the shot coord in the fleet
+    calls the checkIfAllHit in the gameBaord class
 </div>
 
 
@@ -309,55 +238,6 @@
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>marked</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">position where m_body is to be hit</td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -393,7 +273,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line174">line 174</a>
+        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line294">line 294</a>
     </li></ul></dd>
     
 
@@ -422,7 +302,7 @@
 
         
 <div class="param-desc">
-    true if this ship is hit false if not
+    true if all other player's ships have been sunk
 </div>
 
 
@@ -439,7 +319,7 @@
     
 
     
-    <h4 class="name" id="setPosition"><span class="type-signature"></span>setPosition<span class="signature">(startPos)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setBattleShips"><span class="type-signature"></span>setBattleShips<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -447,7 +327,7 @@
 
 
 <div class="description">
-    places the coordinates in the ship body starting at the initial coordinate
+    allows other player to place ships, I.E. player1's board is in player2's class
 </div>
 
 
@@ -456,55 +336,6 @@
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>startPos</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">starting position of ship</td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -540,7 +371,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line158">line 158</a>
+        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line225">line 225</a>
     </li></ul></dd>
     
 
@@ -569,7 +400,105 @@
 
         
 <div class="param-desc">
-    none
+    true if ship placed
+</div>
+
+
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="takeATurn"><span class="type-signature"></span>takeATurn<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    prompts player for a position and calls Gameboard's isAHit(), then calls checkIfAllHit()
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line276">line 276</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    returns a message that is then displayed to the player, message says what there hit was and if they have won that is also printed out
 </div>
 
 
