@@ -118,6 +118,7 @@ class Gameboard {
           this.m_testBoard[mapper[row]][colNum] = 'X'
           return true
         } else {
+          this.m_testBoard[mapper[row]][colNum] = 'M'
           return false
         }
     }
@@ -170,9 +171,9 @@ class Ship{
      * @param {string} startPos starting position of ship
      */
     setPosition(startPos) {
-        let startArr = startPos.split(' ');
+        let arr = startPos.split(startPos[0]);
         for (let i = 0; i < this.m_size; i++){
-            this.m_body[i] = startArr[0] + ' ' + (Number(startArr[1]) + i);
+            this.m_body[i] = arr[0] +  (Number(arr[1]) + i);
         }
 
         //maybe return m_body
@@ -196,11 +197,11 @@ class Ship{
         return false;
     }
 
-    /*part of my fleet idea
-    *checkCoords(coord) {
+    
+    checkCoords(coord) {
         return m_body.includes(coord);
     }
-    */
+    
 }
 
 class Player {
@@ -222,16 +223,19 @@ class Player {
         */
     }
 
-    /*This is just an idea to discuss in meeting or imp if we think its a good idea
-    * 
+    //This is just an idea to discuss in meeting or imp if we think its a good idea
+    
     checkFleet(coord) {
-        for (let i = 0; i < m_numShips) {
-            if(m_fleet[i].Some method to check for coords inside of the ships body) {
-                return m_fleet[i] this will give back the ship object with the coords in it, from here we can call the hit methods or place a miss
+        for (let i = 0; i < m_numShips; i++) {
+            if(m_fleet[i].checkCoords(coord)) {
+                this.m_otherPlayerBoard.isAHit(coord);
+                this.m_fleet[i].hit(coord);
+            } else {
+                this.m_otherPlayerBoard.isAHit(coord);
             }
         }
     }
-    */
+    
 
     /**
      * @description takes a starting postions
