@@ -37,15 +37,30 @@ class Gameboard {
     }
 
     /**
-     * @param {number} colNum column number to be placed at
+     * @param {number} coordinate coordinate to be placed at
      * @param {object} ship ship to be placed
      * @returns returns true if out of bounds, false otherwise
      */
-    checkOutOfBound(colNum, ship) {
-
+    checkOutOfBound(coordinate, ship, orientation) {
+        let coord = coordinate.split(coordinate[0])
+        let outOfBound = true
+        let letterASCII = coordinate[0].charCodeAt()
+        coord = parseInt(coord[1],10)
         //This needs to also check vertically I think
+        if (orientation == 'H' || orientation == 'h'){ //I'm assuming that columns are A-J. This only works for capital letters
+            if (letterASCII >=65 && letterASCII <=73){
+                if (letterASCII + ship.getSize() <=74){  //74 is not a typo
+                    outOfBound = false
+                }
+            }
+        }
+        else if (orientation == 'V' || orientation == 'v'){ //Rows are 1-10
+            if (10 - coord - (ship.getSize()-1) <= 0){
+                outOfBound = false
+            }
+        }
 
-        return (10 - colNum - ship.getSize()) < 0;
+        return outOfBound
     } //Check if ship out of bound or not
 
     /**
@@ -56,14 +71,14 @@ class Gameboard {
      * @returns returns true if ship placed, false if invalid ship placement and prints error to console
      */
     placeShip(ship, coord, orientation) {
-        let arr = coord.split(' ');
+        let arr = coord.split(coord[0]) //no spaces needed for coordinate
         const row = arr[0];
         const colNum = Number(arr[1]) - 1;
 
-        if(!checkOutOfBound){
+        if(!checkOutOfBound(ship, coord, orientation)){
           for (let i = 0; i < ship.getSize(); i++){
             // whether a ship is already there on the coord
-            if (orientation === 'vertical') {
+            if (orientation === 'V' || orientation === 'v') { //I changed vertical to 'V' or 'v' in other function
               if(this.m_testBoard[mapper[row] + i][colNum] === 'S'){
                 console.log("Invalid ship placement: Overlap")
                 return [false, null]
@@ -75,7 +90,7 @@ class Gameboard {
           }
 
           for (let i = 0; i < ship.getSize(); i++){
-            if (orientation === 'vertical') {
+            if (orientation === 'V' || orientation === 'v') { //I changed vertical to 'V' or 'v' in other function
               this.m_testBoard[mapper[row] + i][colNum] = 'S';
             } else {
               this.m_testBoard[mapper[row]][colNum + i] = 'S';
@@ -94,7 +109,7 @@ class Gameboard {
      * @returns returns true if the positon holds an 'S', false otherwise, if true, calls Ship's hit function
      */
     isAHit(coord) {
-        const arr = coord.split(' ');
+        const arr = coord.split(coord[0]) //no spaces needed for coordinate
         const row = arr[0];
         const colNum = Number(arr[1]) - 1;
 
@@ -108,13 +123,13 @@ class Gameboard {
 
     /**
      * @description Used to check for win state, iterates through every position on the board looking for 'S'
-     * @returns if there are no more 'S', then it returns true, false otherwise
+     * @returns {boolean} if there are no more 'S', then it returns true, false otherwise
      */
     checkIfAllHit() {
       let lost = true
       for (let i = 0; i < 10; i++){
           for (let j = 0; j < 10; j++){
-              if (this.m_testBoard[i][j] === 'S'){
+              if (this.m_testBoard[mapper[i]][j] == 'S'){
                   lost = false
               }
           }
@@ -192,6 +207,7 @@ class Player {
         this.m_name = name;
         this.m_numShips = numOfShips;
         this.m_otherPlayerBoard = new Gameboard(m_numShips)
+        this.m_fleet = new Array(m_numShips) //holds all the created ships
         /* not sure how we want to actually check if the shot hits any of the ships that the player has
         * maybe have all of the placed ships in an array and then itterate through checking if one of them has the correct coords
         * if we do it this way then we will need some sort of checkHit inside of the player i think in order to iterate through the ships
@@ -211,52 +227,35 @@ class Player {
     */
 
     /**
-     * @pre None
-     * @post Sets the battleship of other player. Basically each player plays with their own boards, set up by the other. They just take turns
+     * @description Sets the battleship of other player. Basically each player plays with their own boards, set up by the other. They just take turns
      */ 
     setBattleShips() {
         console.log("Welcome " + this.m_name + "! Let's have the other player set up their battleship!\n")
-
-        let prevChoice = 'Z0'
         for (let i = 1; i <= this.m_numShips; i++) {
-            for (let pos = 1; pos <= i; pos++) {
-                //The prompting for a choice will change depending on how we decide to do it
-                let choice = window.prompt("For ship #" + i + ", which fills " + i + " squares, what is the position for square #" + pos +": ")
-                //need to add prompt for either vertical or horizontal
-                //need to add checks to make sure the input is in the right format (what is the format we want coming in?)
-                //I think we can remove the checks in this method that check if the placement is valid as that is done in the gameboard class
-                //call the gameBoard place ship and if that's true then call the ships which returns the body and places it in the fleet
-                let valid = false
-                while (valid === false) {
-                    if (pos === 1){
-                        /*
-                        * calls Ship's or Gameboard's position function.
-                        * 
-                        */
-                    prevChoice = choice
+            //The prompting for a choice will change depending on how we decide to do it
+            let cochoice = window.prompt("For ship #" + i + ", what coordinate would you like it to start: ") //asks for coordinates
+            let orchoice = window.prompt("\nWhat orientation('V' for vertical 'H' for horizontal) would you like for this ship: ") //asks for orientation
+            //need to add prompt for either vertical or horizontal
+            //need to add checks to make sure the input is in the right format (what is the format we want coming in?)
+            //I think we can remove the checks in this method that check if the placement is valid as that is done in the gameboard class
+            //call the gameBoard place ship and if that's true then call the ships which returns the body and places it in the fleet
+            let valid = false
+            while (valid === false) {
+                let temp = new Ship(i)
+                temp.setPosition(cochoice)
+                if (this.m_otherPlayerBoard.placeShip(temp, cochoice, orchoice)){
+                    //add the ship to m_fleet
                     valid = true
-                    }
-                    else {
-                        //The following just seperates the letter and numbers in the choice i.e. B10 just becomes 10
-                        let pre = prevChoice.split(prevChoice[0])
-                        let ch = choice.split(choice[0])
-                        pre = pareseInt(pre[1],10)
-                        ch = parseInt(ch[1],10)
-
-                        if (Math.abs(alert(prevChoice.charCodeAt(0) - choice.charCodeAt(0))) === 1 &&  Math.abs(pre - ch) === 1) {
-                            /**
-                             * calls Ship's or Gameboard's position functions.
-                             * I think we'll want to call the gameboard which will then call the ships if it works
-                             */
-                            valid = true
-                        }
-                        else {
-                            console.log("\nInvalid position! Try Again!\n")
-                            choice = window.prompt("For ship #" + i + ", which fills " + i + " squares, what is the position for square #" + pos +": ")
-                        }
                 }
+                else{
+                    cochoice = window.prompt("\nTry Again! For ship #" + i + ", what coordinate would you like it to start: ")
+                    orchoice = window.prompt("\nWhat orientation('V' for vertical 'H' for horizontal) would you like for this ship: ")
                 }
+                //The following just seperates the letter and numbers in the choice i.e. B10 just becomes 10, can still access the letter
+                //let ch = cochoice.split(cochoice[0])
+                //ch = parseInt(ch[1],10) //The second element is just the numbers, this turns it into numbers intead of strings
             }
+ 
         }
 
     }
@@ -269,7 +268,8 @@ class Player {
         //The prompting for a choice will change depending on how we decide to do it
         let choice = window.prompt("What's your guess?: ")
         if (this.m_otherPlayerBoard.isAHit(choice)){
-            console.log("\nIt was a hit!\n") //Have function that determines if a battleship has been sunken
+            console.log("\nIt was a hit!\n") 
+            //Have function that determines if a battleship has been sunken
             if (this.m_otherPlayerBoard.checkIfAllHit()){
                 console.log("\nCongratulations, " + m_name + "! You have sunk all your enemy's battleships! You won!\n")
             }
@@ -332,6 +332,7 @@ while(!Player1.hasWon() || !PLayer2.hasWon()) {
         //Are we showing Player1's board here so they can see where they've been hit?
         Player2.takeATurn()
     }
+    i++
 }
 
 //Game End Message
