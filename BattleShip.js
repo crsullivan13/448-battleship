@@ -235,6 +235,26 @@ class Player {
     */
 
     /**
+     * @description takes a starting postions
+     * @param {Ship} ship object to be "stored"
+     * @param {string} startPos starting coordinates of ship
+     * @param {string} orientation horizontal or vertical oreintation of ship
+     */
+    addToFleet(ship, startPos,orientation){
+        this.m_fleet[ship.getSize()-1] = new Array(ship.getSize())
+        let variable = startPos.split(startPos[0])
+        if (orientation == 'V' || orientation == 'v'){
+            for (let i = 0; i < ship.getSize(); i++) {
+                fleet[ship.getSize()-1][i] = String.fromCharCode(startPos.charCodeAt(0) + i) + variable[1]
+            }
+        } else {
+            for (let i = 0; i < ship.getSize(); i++) {
+                fleet[ship.getSize()-1][i] = startPos[0] + String(Number(variable[1]+i))
+            }
+        }
+    }
+
+    /**
      * @description allows other player to place ships, I.E. player1's board is in player2's class
      * @returns true if ship placed
      * */
@@ -243,7 +263,7 @@ class Player {
         for (let i = 1; i <= this.m_numShips; i++) {
             //The prompting for a choice will change depending on how we decide to do it
             let cochoice = window.prompt("For ship #" + i + ", what coordinate would you like it to start: ") //asks for coordinates
-            let orchoice = window.prompt("\nWhat orientation('V' for vertical 'H' for horizontal) would you like for this ship: ") //asks for orientation
+            let orchoice = window.prompt("\nWhat orientation ('V' for vertical 'H' for horizontal) would you like for this ship: ") //asks for orientation
             //need to add prompt for either vertical or horizontal
             //need to add checks to make sure the input is in the right format (what is the format we want coming in?)
             //I think we can remove the checks in this method that check if the placement is valid as that is done in the gameboard class
@@ -318,9 +338,13 @@ class Player {
 let play1 = window.prompt("Player1, what is your name?: ")
 let play2 = window.prompt("Player2, what is your name? :")
 console.log("Let's play BattleShip!\n")
-console.log("Depending on how many ships you pick, the type of ships you have will differ.\n")
-console.log("If you choose 1 ship, you will get 1 ship of 1x1. If you choose 2 ships, you will get 1 ship that is 1x1 and another that is 1x2.\n")
+console.log("Depending on how many ships you pick, the type of ships you have will differ. You can choose between 1 to 6 ships.\n")
+console.log("If you choose 1 ship, you will get 1 ship of 1x1. If you choose 2 ships, you will get 1 ship that is 1x1 and another that is 1x2 and so on.\n")
 let numShips = window.prompt("How many ships will both players have? ")
+
+while (numShips <=0 || numShips > 6){
+    numShips = window.prompt('\nYou gave an invalid amount of ships. Try again: ')
+}
 
 let Player1 = new Player(numShips,play1)
 let PLayer2 = new Player(numShips, play2)
@@ -346,7 +370,7 @@ while(!Player1.hasWon() || !PLayer2.hasWon()) {
 
 //Game End Message
 if (Player1.hasWon()) {
-  console.log('congrats player1')
+  console.log('\nCongratulations! ' + Player1.m_name + " has won!\n")
 } else {
-  console.log('congrats player2')
+  console.log('\nCongratulations! ' + Player2.m_name + " has won!\n")
 }
