@@ -35,7 +35,7 @@ class Gameboard {
             }
         }
 
-        //console.log(this.m_testBoard); for testing
+        //console.log(this.m_testBoard); //for testing
     }
 
     /**
@@ -43,12 +43,12 @@ class Gameboard {
      * @param {object} ship ship to be placed
      * @returns returns true if out of bounds, false otherwise
      */
-    checkOutOfBound(coordinate, ship, orientation) {
-        let coord = coordinate.split(coordinate[0])
+    checkOutOfBound(coordinate, ship, orientation) { 
+        coordinate = coordinate.toString();
+        let coord = coordinate.split(coordinate[0]);
         let outOfBound = true
-        let letterASCII = coordinate[0].charCodeAt()
+        let letterASCII = coordinate[0].charCodeAt(0)
         coord = parseInt(coord[1],10)
-        //This needs to also check vertically I think
         if (orientation == 'H' || orientation == 'h'){ //I'm assuming that columns are A-J. This only works for capital letters
             if (letterASCII >=65 && letterASCII <=73){
                 if (letterASCII + ship.getSize() <=74){  //74 is not a typo
@@ -57,7 +57,7 @@ class Gameboard {
             }
         }
         else if (orientation == 'V' || orientation == 'v'){ //Rows are 1-10
-            if (10 - coord - (ship.getSize()-1) <= 0){
+            if (10 - coord - (ship.getSize-1) <= 0){
                 outOfBound = false
             }
         }
@@ -73,6 +73,7 @@ class Gameboard {
      * @returns returns true if ship placed, false if invalid ship placement and prints error to console
      */
     placeShip(ship, coord, orientation) {
+        coord = coord.toString()
         let arr = coord.split(coord[0]) //no spaces needed for coordinate
         const row = arr[0];
         const colNum = Number(arr[1]) - 1;
@@ -111,6 +112,7 @@ class Gameboard {
      * @returns returns true if the positon holds an 'S', false otherwise, if true, calls Ship's hit function
      */
     isAHit(coord) {
+        coord = coord.toString();
         const arr = coord.split(coord[0]) //no spaces needed for coordinate
         const row = arr[0];
         const colNum = Number(arr[1]) - 1;
@@ -132,7 +134,7 @@ class Gameboard {
       let lost = true
       for (let i = 0; i < 10; i++){
           for (let j = 0; j < 10; j++){
-              if (this.m_testBoard[mapper[i]][j] == 'S'){
+              if (this.m_testBoard[i][j] == 'S'){
                   lost = false
               }
           }
@@ -172,6 +174,7 @@ class Ship{
      * @param {string} startPos starting position of ship
      */
     setPosition(startPos) {
+        startPos = startPos.toString()
         let arr = startPos.split(startPos[0]);
         for (let i = 0; i < this.m_size; i++){
             this.m_body[i] = arr[0] +  (Number(arr[1]) + i);
