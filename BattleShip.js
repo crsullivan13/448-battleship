@@ -43,12 +43,13 @@ class Gameboard {
      * @param {object} ship ship to be placed
      * @returns returns true if out of bounds, false otherwise
      */
-    checkOutOfBound(coordinate, ship, orientation) { 
+    checkOutOfBound(ship, coordinate, orientation) { 
         coordinate = coordinate.toString();
         let coord = coordinate.split(coordinate[0]);
         let outOfBound = true
         let letterASCII = coordinate[0].charCodeAt(0)
         coord = parseInt(coord[1],10)
+        //console.log(coord);
         if (orientation == 'H' || orientation == 'h'){ //I'm assuming that columns are A-J. This only works for capital letters
             if (letterASCII >=65 && letterASCII <=73){
                 if (letterASCII + ship.getSize() <=74){  //74 is not a typo
@@ -57,7 +58,9 @@ class Gameboard {
             }
         }
         else if (orientation == 'V' || orientation == 'v'){ //Rows are 1-10
-            if (10 - coord - (ship.getSize-1) <= 0){
+            //console.log('in 1')
+            if (10 - coord - (ship.getSize()-1) >= 0){
+                //console.log('in 2')
                 outOfBound = false
             }
         }
@@ -75,31 +78,35 @@ class Gameboard {
     placeShip(ship, coord, orientation) {
         coord = coord.toString()
         let arr = coord.split(coord[0]) //no spaces needed for coordinate
-        const row = arr[0];
+        const row = coord[0];
+        console.log(row);
         const colNum = Number(arr[1]) - 1;
 
         if(!this.checkOutOfBound(ship, coord, orientation)){
           for (let i = 0; i < ship.getSize(); i++){
             // whether a ship is already there on the coord
             if (orientation === 'V' || orientation === 'v') { //I changed vertical to 'V' or 'v' in other function
-              if(this.m_testBoard[mapper[row] + i][colNum] === 'S'){
+              if(this.m_testBoard[Number(mapper[row]) + i][colNum] === 'S'){
                 console.log("Invalid ship placement: Overlap")
                 return false
               }
-            } else if(this.m_testBoard[mapper[row]][colNum + i] === 'S'){
+            } else if(this.m_testBoard[Number(mapper[row])][colNum + i] === 'S'){
               console.log("Invalid ship placement: Overlap")
+              //console.log(this.m_testBoard)
               return false
             }
           }
 
+        
           for (let i = 0; i < ship.getSize(); i++){
             if (orientation === 'V' || orientation === 'v') { //I changed vertical to 'V' or 'v' in other function
-              this.m_testBoard[mapper[row] + i][colNum] = 'S';
+              this.m_testBoard[Number(mapper[row]) + i][colNum] = 'S';
             } else {
-              this.m_testBoard[mapper[row]][colNum + i] = 'S';
+              this.m_testBoard[Number(mapper[row])][colNum + i] = 'S';
             }
             
           }
+          
         } else {
             console.log("Invalid ship placement: Off board");
             return false;
@@ -114,14 +121,14 @@ class Gameboard {
     isAHit(coord) {
         coord = coord.toString();
         const arr = coord.split(coord[0]) //no spaces needed for coordinate
-        const row = arr[0];
+        const row = coord[0];
         const colNum = Number(arr[1]) - 1;
 
-        if (this.m_testBoard[mapper[row]][colNum] == 'S') {    
-          this.m_testBoard[mapper[row]][colNum] = 'X'
+        if (this.m_testBoard[Number(mapper[row])][colNum] == 'S') {    
+          this.m_testBoard[Number(mapper[row])][colNum] = 'X'
           return true
         } else {
-          this.m_testBoard[mapper[row]][colNum] = 'M'
+          this.m_testBoard[Number(mapper[row])][colNum] = 'M'
           return false
         }
     }
@@ -301,12 +308,12 @@ class Player {
      */
     takeATurn() {
         //The prompting for a choice will change depending on how we decide to do it
-        let choice = console.readLine("What's your guess?: ")
+        let choice = prompt("What's your guess?: ")
         if (this.m_otherPlayerBoard.isAHit(choice)){
             console.log("\nIt was a hit!\n") 
             //Have function that determines if a battleship has been sunken
             if (this.m_otherPlayerBoard.checkIfAllHit()){
-                console.log("\nCongratulations, " + m_name + "! You have sunk all your enemy's battleships! You won!\n")
+                console.log("\nCongratulations, " + this.m_name + "! You have sunk all your enemy's battleships! You won!\n")
             }
         }
         else{
@@ -353,14 +360,17 @@ while (numShips <=0 || numShips > 6){
 }
 
 let Player1 = new Player(numShips,play1)
-let PLayer2 = new Player(numShips, play2)
+let Player2 = new Player(numShips, play2)
 
 Player1.setBattleShips()
-PLayer2.setBattleShips()
+Player2.setBattleShips()
+
+//console.log(Player1.m_otherPlayerBoard);
+//console.log(Player2.m_otherPlayerBoard);
 
 //This is the game. Each Player Takes turns
 let i = 1
-while(!Player1.hasWon() || !PLayer2.hasWon()) {
+while(!Player1.hasWon() && !Player2.hasWon()) {
     if (i%2 == 1 ){
         console.log("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
         //Are we showing Player1's board here so they can see where they've been hit?
@@ -374,8 +384,10 @@ while(!Player1.hasWon() || !PLayer2.hasWon()) {
     i++
     if (Player1.hasWon()) {
         console.log('\nCongratulations! ' + Player1.m_name + " has won!\n")
+        break;
       } else {
         console.log('\nCongratulations! ' + Player2.m_name + " has won!\n")
+        break;
       }
 }
 
