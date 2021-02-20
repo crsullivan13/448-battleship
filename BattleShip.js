@@ -1,6 +1,9 @@
 /**
  * THIS IS ALL JUST BRAINSTORMING!! FEEL FREE TO REJECT OR IMPROVE ON THE IDEAS
  */
+function isValidCode(code){
+    return /^[A-J]\d+$/.test(code);
+}
 const prompt = require('prompt-sync')();
 const mapper = {
     A: 0,
@@ -309,15 +312,25 @@ class Player {
     takeATurn() {
         //The prompting for a choice will change depending on how we decide to do it
         let choice = prompt("What's your guess?: ")
-        if (this.m_otherPlayerBoard.isAHit(choice)){
-            console.log("\nIt was a hit!\n") 
-            //Have function that determines if a battleship has been sunken
-            if (this.m_otherPlayerBoard.checkIfAllHit()){
-                console.log("\nCongratulations, " + this.m_name + "! You have sunk all your enemy's battleships! You won!\n")
+        let tookATurn = false
+        while(tookATurn = false){
+            if (isValidCode(choice)){
+                if (this.m_otherPlayerBoard.isAHit(choice)){
+                    console.log("\nIt was a hit!\n") 
+                    //Have function that determines if a battleship has been sunken
+                    if (this.m_otherPlayerBoard.checkIfAllHit()){
+                        console.log("\nCongratulations, " + this.m_name + "! You have sunk all your enemy's battleships! You won!\n")
+                    }
+                }
+                else{
+                    console.log("\nYou missed!\n")
+                }
+                tookATurn = true
             }
-        }
-        else{
-            console.log("\nYou missed!\n")
+            else {
+                console.log("\nERROR: The coordinate you input was wrong. Try again: .\n")
+                choice = prompt("What's your guess?: ")
+            }
         }
     }
 
