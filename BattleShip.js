@@ -84,11 +84,11 @@ class Gameboard {
             if (orientation === 'V' || orientation === 'v') { //I changed vertical to 'V' or 'v' in other function
               if(this.m_testBoard[mapper[row] + i][colNum] === 'S'){
                 console.log("Invalid ship placement: Overlap")
-                return [false, null]
+                return false
               }
             } else if(this.m_testBoard[mapper[row]][colNum + i] === 'S'){
               console.log("Invalid ship placement: Overlap")
-              return [false, null]
+              return false
             }
           }
 
@@ -102,9 +102,9 @@ class Gameboard {
           }
         } else {
             console.log("Invalid ship placement: Off board");
-            return [false, null];
+            return false;
         }
-        return [true, coord];
+        return true;
     }
 
     /**
