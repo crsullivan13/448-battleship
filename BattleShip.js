@@ -4,7 +4,7 @@
 function isValidCode(code){
     return /^[A-J]\d+$/.test(code);
 }
-//const prompt = require('prompt-sync')();
+const prompt = require('prompt-sync')();
 const mapper = {
     A: 0,
     B: 1,
@@ -89,11 +89,11 @@ class Gameboard {
           for (let i = 0; i < ship.getSize(); i++){
             // whether a ship is already there on the coord
             if (orientation === 'V' || orientation === 'v') { //I changed vertical to 'V' or 'v' in other function
-              if(this.m_testBoard[Number(mapper[row]) + i][colNum] === 'S'){
+              if(this.m_testBoard[colNum + i][Number(mapper[row])] === 'S'){
                 console.log("Invalid ship placement: Overlap")
                 return false
               }
-            } else if(this.m_testBoard[Number(mapper[row])][colNum + i] === 'S'){
+            } else if(this.m_testBoard[colNum][Number(mapper[row]) + i] === 'S'){
               console.log("Invalid ship placement: Overlap")
               //console.log(this.m_testBoard)
               return false
@@ -103,9 +103,9 @@ class Gameboard {
         
           for (let i = 0; i < ship.getSize(); i++){
             if (orientation === 'V' || orientation === 'v') { //I changed vertical to 'V' or 'v' in other function
-              this.m_testBoard[Number(mapper[row]) + i][colNum] = 'S';
+              this.m_testBoard[colNum + i][Number(mapper[row])] = 'S';
             } else {
-              this.m_testBoard[Number(mapper[row])][colNum + i] = 'S';
+              this.m_testBoard[colNum][Number(mapper[row]) + i] = 'S';
             }
             
           }
@@ -127,11 +127,11 @@ class Gameboard {
         const row = coord[0];
         const colNum = Number(arr[1]) - 1;
 
-        if (this.m_testBoard[Number(mapper[row])][colNum] == 'S') {    
-          this.m_testBoard[Number(mapper[row])][colNum] = 'X'
+        if (this.m_testBoard[colNum][Number(mapper[row])] == 'S') {    
+          this.m_testBoard[colNum][Number(mapper[row])] = 'X'
           return true
         } else {
-          this.m_testBoard[Number(mapper[row])][colNum] = 'M'
+          this.m_testBoard[colNum][Number(mapper[row])] = 'M'
           return false
         }
     }
@@ -183,16 +183,22 @@ class Ship{
      * @returns none
      * @param {string} startPos starting position of ship
      */
-    setPosition(startPos) {
+    setPosition(startPos, orientation) {
         startPos = startPos.toString()
+        orientation = orientation.toString()
         let arr = startPos.split(startPos[0]);
-        for (let i = 0; i < this.m_size; i++){
-            this.m_body[i] = arr[0] +  (Number(arr[1]) + i);
-        }
+        let letterASCII = startPos[0].charCodeAt(0);
 
-        //maybe return m_body
-        //console.log(this.m_body);
-    
+        if (orientation === 'V' || orientation === 'v'){
+            for (let i = 0; i < this.m_size; i++){
+                this.m_body[i] = String.fromCharCode(letterASCII + i) + Number(arr[1]);
+            }
+        } else {
+            for (let i = 0; i < this.m_size; i++){
+                this.m_body[i] = startPos[0] +  (Number(arr[1]) + i);
+            }
+        }
+        console.log(this.m_body);
     }
 
     /**
@@ -287,7 +293,7 @@ class Player {
             let valid = false
             while (valid === false) {
                 let temp = new Ship(i)
-                temp.setPosition(cochoice)
+                temp.setPosition(cochoice, orchoice)
                 if (this.m_otherPlayerBoard.placeShip(temp, cochoice, orchoice)){
                     this.addToFleet(temp)
                     valid = true
@@ -378,8 +384,8 @@ let Player2 = new Player(numShips, play2)
 Player1.setBattleShips()
 Player2.setBattleShips()
 
-//console.log(Player1.m_otherPlayerBoard);
-//console.log(Player2.m_otherPlayerBoard);
+console.log(Player1.m_otherPlayerBoard);
+console.log(Player2.m_otherPlayerBoard);
 
 //This is the game. Each Player Takes turns
 let i = 1
@@ -396,10 +402,10 @@ while(!Player1.hasWon() && !Player2.hasWon()) {
     }
     i++
     if (Player1.hasWon()) {
-        console.log('\nCongratulations! ' + Player1.m_name + " has won!\n")
+        console.log('\nCongratulations! ' + Player2.m_name + " has won!\n")
         break;
       } else {
-        console.log('\nCongratulations! ' + Player2.m_name + " has won!\n")
+        console.log('\nCongratulations! ' + Player1.m_name + " has won!\n")
         break;
       }
 }
