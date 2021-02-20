@@ -4,7 +4,7 @@
 function isValidCode(code){
     return /^[A-J]\d+$/.test(code);
 }
-const prompt = require('prompt-sync')();
+//const prompt = require('prompt-sync')();
 const mapper = {
     A: 0,
     B: 1,
@@ -369,7 +369,7 @@ console.log("If you choose 1 ship, you will get 1 ship of 1x1. If you choose 2 s
 let numShips = prompt("How many ships will both players have? ")
 
 while (numShips <=0 || numShips > 6){
-    numShips = console.readLine('\nYou gave an invalid amount of ships. Try again: ')
+    numShips = prompt('\nYou gave an invalid amount of ships. Try again: ')
 }
 
 let Player1 = new Player(numShips,play1)
