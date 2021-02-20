@@ -404,8 +404,8 @@ while(!Player1.hasWon() && !Player2.hasWon()) {
     if (Player1.hasWon()) {
         console.log('\nCongratulations! ' + Player2.m_name + " has won!\n")
         break;
-      } else {
-        console.log('\nCongratulations! ' + Player1.m_name + " has won!\n")
+      } else if(Player2.hasWon()){
+        console.log('\nCongratulations! ' + Player2.m_name + " has won!\n")
         break;
       }
 }
