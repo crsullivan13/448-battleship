@@ -1,0 +1,73 @@
+
+body{
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    background-image: url('https://store-images.s-microsoft.com/image/apps.18003.14344859561372412.65336d63-1d56-4727-a7b1-9763ff0e531a.1441cdfb-157c-44ea-a105-a1539b8310af?mode=scale&q=90&h=1080&w=1920');
+    background-size: cover;
+
+}
+
+.main-title{
+    display: flex;
+    justify-content: center;
+    font-family: 'Black Ops One', bold;
+    font-size: 40px;
+    color: #ffffff;
+    text-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777, 0px 4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333, 0px 8px 7px #001135;
+}
+
+
+.key{
+    border: 1px solid black;
+    background-color:  rgb(13, 51, 76);
+    
+    
+}
+
+.key-block{
+    border-width: 2px;
+    border-radius: 5px;
+    padding: 17px;
+}
+
+td{
+    background-color: rgb(26,102,153);
+    border-width: 5px;
+    border-radius: 5px;
+    padding: 17px;
+    font-size: 150%;
+}
+
+th{
+    color: #fff;
+}
+
+
+main { 
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  margin-left: 600px;
+  height: 50vh;
+  max-width: 1100px;
+}
+
+.OtherPlayer{
+     
+    width: 250;
+    border: 3px solid rgb(13, 51, 76);
+    background-color:  rgb(13, 51, 76);
+    
+      
+}
+
+.CurrentPlayer{
+ 
+    width: 250;
+    border: 3px solid  rgb(13, 51, 76);
+    background-color:   rgb(13, 51, 76);
+    
+}
