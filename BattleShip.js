@@ -395,7 +395,7 @@ class Player {
      */
     takeATurn(player) {
         //The prompting for a choice will change depending on how we decide to do it
-        let choice = window.prompt("What's your guess?: ")
+        let choice = window.alert("What is your guess?")
         choice = choice.toUpperCase();
         let tookATurn = false
         while(tookATurn == false){
@@ -499,8 +499,6 @@ window.addEventListener("DOMContentLoaded", () => {
 window.addEventListener("load", () => {
     let start = new Game();
 });
-
-
 
 //Game End Message
 
