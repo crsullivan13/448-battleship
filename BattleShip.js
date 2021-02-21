@@ -137,13 +137,10 @@ class Gameboard {
           let id;
   
           if(player == 1) {
-              console.log("here C")
               id = 'c' + String.fromCharCode(letterASCII) + Number(arr[1]);
           } else {
-              console.log("here")
               id = 'o' + String.fromCharCode(letterASCII) + Number(arr[1]);
           }
-          console.log("ALLO")
           document.getElementById(id.toString()).style['background-color'] = "white";
           //console.log("You Missed!\n")
           return false
@@ -287,9 +284,54 @@ class Ship{
                 
             }
         }
-
-        
         return false;
+    }
+
+    hide(player) {
+        console.log("Hidden")
+        let marked 
+        let arr;
+        let letterASCII;
+        let id;
+        for(let i = 0; i < this.m_size; i++) {
+            
+            if(this.m_body[i] != 'X'){
+                marked = (this.m_body[i]).toString();
+                arr = marked.split(marked[0]);
+                letterASCII = marked[0].charCodeAt(0);
+                if(player == 1) {
+                    //console.log("here C")
+                    id = 'c' + String.fromCharCode(letterASCII) + (Number(arr[1]));
+                } else {
+                    //console.log("here")
+                    id = 'o' + String.fromCharCode(letterASCII) + (Number(arr[1]));
+                }
+                document.getElementById(id.toString()).style['background-color'] = "rgb(26,102,153)";
+            }
+        }
+        
+    }
+
+    show(player){
+        let marked 
+        let arr;
+        let letterASCII;
+        let id;
+        for(let i = 0; i < this.m_size; i++) {
+            if(this.m_body[i] !== 'X'){
+                marked = (this.m_body[i]).toString();
+                arr = marked.split(marked[0]);
+                letterASCII = marked[0].charCodeAt(0);
+                if(player == 1) {
+                    //console.log("here C")
+                    id = 'o' + String.fromCharCode(letterASCII) + (Number(arr[1]));
+                } else {
+                    //console.log("here")
+                    id = 'c' + String.fromCharCode(letterASCII) + (Number(arr[1]));
+                }
+                document.getElementById(id.toString()).style['background-color'] = "black";
+            }
+        }
     }
 
 
@@ -362,10 +404,7 @@ class Player {
             while ((orchoice != 'H' && orchoice != 'h') && (orchoice != 'V' && orchoice != 'v')){
                 orchoice = window.prompt("\nYour choice of orientation was invalid. Try again: ")
             }
-            //need to add prompt for either vertical or horizontal
-            //need to add checks to make sure the input is in the right format (what is the format we want coming in?)
-            //I think we can remove the checks in this method that check if the placement is valid as that is done in the gameboard class
-            //call the gameBoard place ship and if that's true then call the ships which returns the body and places it in the fleet
+
             let valid = false
             while (valid === false) {
                 let temp = new Ship(i)
@@ -389,12 +428,27 @@ class Player {
 
     }
 
+    hideShips(player) {
+        
+        for(let i = 0; i < this.m_numShips; i++) {
+            console.log("hide")
+            this.m_fleet[i].hide(player);
+        }
+    }
+
+    showShips(player) {
+        for(let i = 0; i < this.m_numShips; i++) {
+            this.m_fleet[i].show(player);
+        }
+    }
+
     /**
      * @description prompts player for a position and calls Gameboard's isAHit(), then calls checkIfAllHit()
      * @returns returns a message that is then displayed to the player, message says what there hit was and if they have won that is also printed out
      */
     takeATurn(player) {
         //The prompting for a choice will change depending on how we decide to do it
+        //console.log(this.m_fleet)
         let choice = window.prompt("What's your guess?: ")
         choice = choice.toUpperCase();
         let tookATurn = false
@@ -469,10 +523,12 @@ let Player1 = new Player(numShips,play1)
 let Player2 = new Player(numShips, play2)
 
 Player1.setBattleShips(1)
+Player1.hideShips(1);
 Player2.setBattleShips(2)
+Player2.hideShips(2);
 
-console.log(Player1.m_otherPlayerBoard);
-console.log(Player2.m_otherPlayerBoard);
+//console.log(Player1.m_otherPlayerBoard);
+//console.log(Player2.m_otherPlayerBoard);
 
 //This is the game. Each Player Takes turns
 let i = 1
@@ -480,12 +536,16 @@ while(!Player1.hasWon() && !Player2.hasWon()) {
     if (i%2 == 1 ){
         console.log("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
         //Are we showing Player1's board here so they can see where they've been hit?
-        Player1.takeATurn(1)
+        Player2.showShips(1)
+        Player1.takeATurn(1);
+        Player2.hideShips(2)
     }
     else{
         console.log("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
         //Are we showing Player1's board here so they can see where they've been hit?
+        Player1.showShips(2)
         Player2.takeATurn(2)
+        Player1.hideShips(1)
     }
     i++
 }
