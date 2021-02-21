@@ -122,7 +122,7 @@ class Gameboard {
      * @param {string} coord coordinates the other playes will provide
      * @returns returns true if the positon holds an 'S', false otherwise, if true, calls Ship's hit function
      */
-    isAHit(coord) {
+    isAHit(coord, player) {
         coord = coord.toString();
         const arr = coord.split(coord[0]) //no spaces needed for coordinate
         const row = coord[0];
@@ -133,6 +133,18 @@ class Gameboard {
           return true
         } else {
           this.m_testBoard[colNum][Number(mapper[row])] = 'M'
+          let letterASCII = coord[0].charCodeAt(0);
+          let id;
+  
+          if(player == 1) {
+              console.log("here C")
+              id = 'c' + String.fromCharCode(letterASCII) + Number(arr[1]);
+          } else {
+              console.log("here")
+              id = 'o' + String.fromCharCode(letterASCII) + Number(arr[1]);
+          }
+          console.log("ALLO")
+          document.getElementById(id.toString()).style['background-color'] = "white";
           //console.log("You Missed!\n")
           return false
         }
@@ -212,23 +224,36 @@ class Ship{
      * @returns none
      * @param {string} startPos starting position of ship
      */
-    setPosition(startPos, orientation) {
+    setPosition(startPos, orientation, turn) {
         startPos = startPos.toString()
         orientation = orientation.toString()
         let arr = startPos.split(startPos[0]);
         let letterASCII = startPos[0].charCodeAt(0);
         let id;
-        let cell;
 
         if (orientation === 'H' || orientation === 'h'){
             for (let i = 0; i < this.m_size; i++){
                 this.m_body[i] = String.fromCharCode(letterASCII + i) + Number(arr[1]);
-                id = String.fromCharCode(letterASCII + i) + Number(arr[1]);
+                if(turn == 1) {
+                    //console.log("here C")
+                    id = 'c' + String.fromCharCode(letterASCII + i) + Number(arr[1]);
+                } else {
+                    //console.log("here")
+                    id = 'o' + String.fromCharCode(letterASCII + i) + Number(arr[1]);
+                }
                 document.getElementById(id.toString()).style['background-color'] = "black";
             }
         } else {
             for (let i = 0; i < this.m_size; i++){
                 this.m_body[i] = startPos[0] +  (Number(arr[1]) + i);
+                if(turn == 1) {
+                    //console.log("here C")
+                    id = 'c' + String.fromCharCode(letterASCII) + (Number(arr[1])+i);
+                } else {
+                    //console.log("here")
+                    id = 'o' + String.fromCharCode(letterASCII) + (Number(arr[1])+i);
+                }
+                document.getElementById(id.toString()).style['background-color'] = "black";
             }
         }
         console.log(this.m_body);
@@ -239,18 +264,34 @@ class Ship{
      * @param {string} marked position where m_body is to be hit
      * @returns true if this ship is hit false if not
      */
-    hit(marked) {
+    hit(marked, player) {
+        marked = marked.toString()
+        let arr = marked.split(marked[0]);
+        let letterASCII = marked[0].charCodeAt(0);
+        let id;
+
         for (let i = 0; i < this.m_size; i++) {
             if(this.m_body[i] === marked) {
                 this.m_body[i] = 'X';
                 this.m_health--;
                 console.log(this.m_body);
+                if(player == 1) {
+                    //console.log("here C")
+                    id = 'c' + String.fromCharCode(letterASCII) + Number(arr[1]);
+                } else {
+                    //console.log("here")
+                    id = 'o' + String.fromCharCode(letterASCII) + Number(arr[1]);
+                }
+                document.getElementById(id.toString()).style['background-color'] = "red";
                 return true;
                 
             }
         }
+
+        
         return false;
     }
+
 
      /**
      * @description checks the coordinates in ship's body to see if it includes the hit coord
@@ -284,13 +325,14 @@ class Player {
      * @returns returns ship object that had coordinate in it that was hit
      * @param {string} coord coord to be hit
      */
-    checkFleet(coord) {
+    checkFleet(coord, player) {
         for (let i = 0; i < this.m_numShips; i++) {
             if(this.m_fleet[i].checkCoords(coord)) {
-                this.m_fleet[i].hit(coord);
+                this.m_fleet[i].hit(coord, player);
                 return this.m_fleet[i];
-            } 
+            }
         }
+        //this.m_fleet[i].hit(coord, player);
     }
     
 
@@ -306,7 +348,7 @@ class Player {
      * @description allows other player to place ships, I.E. player1's board is in player2's class
      * @returns true if ship placed
      * */
-    setBattleShips() {
+    setBattleShips(player) {
         console.log("Welcome " + this.m_name + "! Let's have the other player set up their battleship!\n")
         for (let i = 1; i <= this.m_numShips; i++) {
             //The prompting for a choice will change depending on how we decide to do it
@@ -329,7 +371,7 @@ class Player {
                 let temp = new Ship(i)
  
                 if (isValidCode(cochoice) && this.m_otherPlayerBoard.placeShip(temp, cochoice, orchoice)){
-                    temp.setPosition(cochoice, orchoice)
+                    temp.setPosition(cochoice, orchoice, player)
                     this.addToFleet(temp)
                     valid = true
                 }
@@ -351,7 +393,7 @@ class Player {
      * @description prompts player for a position and calls Gameboard's isAHit(), then calls checkIfAllHit()
      * @returns returns a message that is then displayed to the player, message says what there hit was and if they have won that is also printed out
      */
-    takeATurn() {
+    takeATurn(player) {
         //The prompting for a choice will change depending on how we decide to do it
         let choice = window.prompt("What's your guess?: ")
         choice = choice.toUpperCase();
@@ -363,11 +405,11 @@ class Player {
                     choice = choice.toUpperCase();
                     tookATurn = false
                 } else {
-                    if (this.m_otherPlayerBoard.isAHit(choice)){
+                    if (this.m_otherPlayerBoard.isAHit(choice, player)){
                     
                         console.log("\nIt was a hit!\n")
                         tookATurn = true
-                        let holder = this.checkFleet(choice);
+                        let holder = this.checkFleet(choice, player);
                     
                         if(holder.isSunk()){
                             console.log("Player '" + this.m_name + "' sank opponent's: " + holder.getSize() + " length ship!\n")
@@ -378,6 +420,8 @@ class Player {
                         }
                     }  else{
                         console.log("\nYou missed!\n")
+                        console.log("monke")
+                        this.checkFleet(choice, player)
                         tookATurn = true
                     }
                 
@@ -424,8 +468,8 @@ while (numShips <=0 || numShips > 6 || isNaN(numShips)){
 let Player1 = new Player(numShips,play1)
 let Player2 = new Player(numShips, play2)
 
-Player1.setBattleShips()
-Player2.setBattleShips()
+Player1.setBattleShips(1)
+Player2.setBattleShips(2)
 
 console.log(Player1.m_otherPlayerBoard);
 console.log(Player2.m_otherPlayerBoard);
@@ -436,12 +480,12 @@ while(!Player1.hasWon() && !Player2.hasWon()) {
     if (i%2 == 1 ){
         console.log("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
         //Are we showing Player1's board here so they can see where they've been hit?
-        Player1.takeATurn()
+        Player1.takeATurn(1)
     }
     else{
         console.log("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
         //Are we showing Player1's board here so they can see where they've been hit?
-        Player2.takeATurn()
+        Player2.takeATurn(2)
     }
     i++
 }
