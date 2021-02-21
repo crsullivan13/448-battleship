@@ -395,32 +395,33 @@ class Player {
      */
     takeATurn(player) {
         //The prompting for a choice will change depending on how we decide to do it
-        let choice = window.prompt("What's your guess?: ")
-        choice = choice.toUpperCase();
+        
+        let choice = document.querySelector('#input').value
+        choice = choice.toUpperCase()
         let tookATurn = false
         while(tookATurn == false){
             if (isValidCode(choice)){
                 if (this.m_otherPlayerBoard.isAlreadyShot(choice)) {
-                    choice = window.prompt("What's your guess?: ")
+                    choice = window.alert("What's your guess?: ")
                     choice = choice.toUpperCase();
                     tookATurn = false
                 } else {
                     if (this.m_otherPlayerBoard.isAHit(choice, player)){
                     
-                        console.log("\nIt was a hit!\n")
+                        window.alert("\nIt was a hit!\n")
                         tookATurn = true
                         let holder = this.checkFleet(choice, player);
                     
                         if(holder.isSunk()){
-                            console.log("Player '" + this.m_name + "' sank opponent's: " + holder.getSize() + " length ship!\n")
+                            window.alert("Player '" + this.m_name + "' sank opponent's: " + holder.getSize() + " length ship!\n")
                         }
 
                         if (this.m_otherPlayerBoard.checkIfAllHit()){
-                            console.log("\nCongratulations, " + this.m_name + "! You have sunk all your enemy's battleships! You won!\n")
+                           window.alert("\nCongratulations, " + this.m_name + "! You have sunk all your enemy's battleships! You won!\n")
                         }
                     }  else{
-                        console.log("\nYou missed!\n")
-                        console.log("monke")
+                        window.alert("\nYou missed!\n")
+                       window.alert("monke")
                         this.checkFleet(choice, player)
                         tookATurn = true
                     }
@@ -428,13 +429,13 @@ class Player {
                 }
             }
             else {
-                console.log("\nERROR: The coordinate you input was wrong. Try again!\n")
-                choice = window.prompt("What's your guess?: ")
+                window.alert("\nERROR: The coordinate you input was wrong. Try again!\n")
+                choice = window.alert("Enter a Coordinate to hit in the Coordinate box")
                 choice = choice.toUpperCase()
             }
         }
+    
     }
-
     /**
      * @description calls the checkIfAllHit in the gameBaord class
      * @returns true if all other player's ships have been sunk
