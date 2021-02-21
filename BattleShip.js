@@ -2,7 +2,10 @@
  * THIS IS ALL JUST BRAINSTORMING!! FEEL FREE TO REJECT OR IMPROVE ON THE IDEAS
  */
 function isValidCode(code){
-    return /^[A-J]\d+$/.test(code);
+    let num = code.split(code[0])
+    num = parseInt(num[1],10)
+    let less10 = (num > 0 && num < 11)
+    return ((/^[A-J]\d+$/.test(code)) && less10);
 }
 //const prompt = require('prompt-sync')();
 const mapper = {
@@ -54,8 +57,8 @@ class Gameboard {
         coord = parseInt(coord[1],10)
         //console.log(coord);
         if (orientation == 'H' || orientation == 'h'){ //I'm assuming that columns are A-J. This only works for capital letters
-            if (letterASCII >=65 && letterASCII <=73){
-                if (letterASCII + ship.getSize() <=74){  //74 is not a typo
+            if (letterASCII >=65 && letterASCII <=74){
+                if (letterASCII + ship.getSize()-1 <=74){
                     outOfBound = false
                 }
             }
@@ -279,7 +282,13 @@ class Player {
         for (let i = 1; i <= this.m_numShips; i++) {
             //The prompting for a choice will change depending on how we decide to do it
             let cochoice = prompt("For ship #" + i + ", what coordinate would you like it to start: ") //asks for coordinates
-            let orchoice = prompt("\nWhat orientation ('V' for vertical 'H' for horizontal) would you like for this ship: ") //asks for orientation
+            while (!isValidCode(cochoice)){
+                cochoice = prompt("\nYour coordinate is invalid. Try again: ")
+            }
+            let orchoice = prompt("\nWhat orientation ('V' for vertical(Vertical upwards) 'H' for horizontal) would you like for this ship: ") //asks for orientation
+            while ((orchoice != 'H' && orchoice != 'h') && (orchoice != 'V' && orchoice != 'v')){
+                orchoice = prompt("\nYour choice of orientation was invalid. Try again: ")
+            }
             //need to add prompt for either vertical or horizontal
             //need to add checks to make sure the input is in the right format (what is the format we want coming in?)
             //I think we can remove the checks in this method that check if the placement is valid as that is done in the gameboard class
@@ -294,7 +303,7 @@ class Player {
                 }
                 else{
                     cochoice = prompt("\nTry Again! For ship #" + i + ", what coordinate would you like it to start: ")
-                    orchoice = prompt("\nWhat orientation('V' for vertical 'H' for horizontal) would you like for this ship: ")
+                    orchoice = prompt("\nWhat orientation('V' for vertical(Vertical upwards) 'H' for horizontal) would you like for this ship: ")
                 }
                 //The following just seperates the letter and numbers in the choice i.e. B10 just becomes 10, can still access the letter
                 //let ch = cochoice.split(cochoice[0])
