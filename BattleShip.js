@@ -2,7 +2,11 @@
  * THIS IS ALL JUST BRAINSTORMING!! FEEL FREE TO REJECT OR IMPROVE ON THE IDEAS
  */
 function isValidCode(code){
-    return /^[A-J]\d+$/.test(code);
+    code = code.toString()
+    let num = code.split(code[0])
+    num = parseInt(num[1],10)
+    let less10 = (num > 0 && num < 11)
+    return ((/^[A-J]\d+$/.test(code)) && less10);
 }
 const prompt = require('prompt-sync')();
 const mapper = {
@@ -54,16 +58,14 @@ class Gameboard {
         coord = parseInt(coord[1],10)
         //console.log(coord);
         if (orientation == 'H' || orientation == 'h'){ //I'm assuming that columns are A-J. This only works for capital letters
-            if (letterASCII >=65 && letterASCII <=73){
-                if (letterASCII + ship.getSize() <=74){  //74 is not a typo
+            if (letterASCII >=65 && letterASCII <=74){
+                if (letterASCII + ship.getSize() <=75){  //74 is not a typo
                     outOfBound = false
                 }
             }
         }
         else if (orientation == 'V' || orientation == 'v'){ //Rows are 1-10
-            //console.log('in 1')
             if (10 - coord - (ship.getSize()-1) >= 0){
-                //console.log('in 2')
                 outOfBound = false
             }
         }
@@ -82,7 +84,6 @@ class Gameboard {
         coord = coord.toString()
         let arr = coord.split(coord[0]) //no spaces needed for coordinate
         const row = coord[0];
-        console.log(row);
         const colNum = Number(arr[1]) - 1;
 
         if(!this.checkOutOfBound(ship, coord, orientation)){
@@ -127,13 +128,33 @@ class Gameboard {
         const row = coord[0];
         const colNum = Number(arr[1]) - 1;
 
-        if (this.m_testBoard[colNum][Number(mapper[row])] == 'S') {    
+        if (this.m_testBoard[colNum][Number(mapper[row])] == 'S') {   
           this.m_testBoard[colNum][Number(mapper[row])] = 'X'
           return true
         } else {
           this.m_testBoard[colNum][Number(mapper[row])] = 'M'
+          //console.log("You Missed!\n")
           return false
         }
+    }
+
+
+    /**
+     * @description Checks if a position has already been shot by a player
+     * @returns {boolean} true if it has been which allows them to try again, false if not
+     */
+    isAlreadyShot(coord) {
+        coord = coord.toString();
+        const arr = coord.split(coord[0]) //no spaces needed for coordinate
+        const row = coord[0];
+        const colNum = Number(arr[1]) - 1;
+
+        if(this.m_testBoard[colNum][Number(mapper[row])] === 'M' || this.m_testBoard[colNum][Number(mapper[row])] === 'X') {
+            console.log("You've already shot at this location! Try again!\n");
+            return true;
+        }
+        return false;
+
     }
 
     /**
@@ -178,6 +199,14 @@ class Ship{
         return this.m_size;
     }
 
+     /**
+     * @description checks if ships health is zero
+     * @returns true if zero, false otherwise
+     */
+    isSunk() {
+        return this.m_health === 0;
+    }
+
     /**
      * @description places the coordinates in the ship body starting at the initial coordinate
      * @returns none
@@ -189,7 +218,7 @@ class Ship{
         let arr = startPos.split(startPos[0]);
         let letterASCII = startPos[0].charCodeAt(0);
 
-        if (orientation === 'V' || orientation === 'v'){
+        if (orientation === 'H' || orientation === 'h'){
             for (let i = 0; i < this.m_size; i++){
                 this.m_body[i] = String.fromCharCode(letterASCII + i) + Number(arr[1]);
             }
@@ -211,15 +240,22 @@ class Ship{
             if(this.m_body[i] === marked) {
                 this.m_body[i] = 'X';
                 this.m_health--;
+                console.log(this.m_body);
                 return true;
+                
             }
         }
         return false;
     }
 
-    
+     /**
+     * @description checks the coordinates in ship's body to see if it includes the hit coord
+     * @returns true if contains coord, flase otherwise
+     * @param {string} coord coord to be hit
+     */
     checkCoords(coord) {
-        return m_body.includes(coord);
+        coord = coord.toString()
+        return this.m_body.includes(coord);
     }
     
 }
@@ -236,23 +272,20 @@ class Player {
         this.m_numShips = numOfShips;
         this.m_otherPlayerBoard = new Gameboard(this.m_numShips)
         this.m_fleet = new Array(this.m_numShips) //holds all the created ships
-        /* not sure how we want to actually check if the shot hits any of the ships that the player has
-        * maybe have all of the placed ships in an array and then itterate through checking if one of them has the correct coords
-        * if we do it this way then we will need some sort of checkHit inside of the player i think in order to iterate through the ships
-        * maybe this.m_fleet = [], then when a ship is placed we (in the main game loop) add the ship object to the fleet
-        */
+  
     }
 
-    //This is just an idea to discuss in meeting or imp if we think its a good idea
-    
+     /**
+     * @description checks all of the ships in the players fleet to find one that was hit
+     * @returns returns ship object that had coordinate in it that was hit
+     * @param {string} coord coord to be hit
+     */
     checkFleet(coord) {
-        for (let i = 0; i < m_numShips; i++) {
-            if(m_fleet[i].checkCoords(coord)) {
-                this.m_otherPlayerBoard.isAHit(coord);
+        for (let i = 0; i < this.m_numShips; i++) {
+            if(this.m_fleet[i].checkCoords(coord)) {
                 this.m_fleet[i].hit(coord);
-            } else {
-                this.m_otherPlayerBoard.isAHit(coord);
-            }
+                return this.m_fleet[i];
+            } 
         }
     }
     
@@ -263,17 +296,6 @@ class Player {
      */
     addToFleet(ship){
         this.m_fleet[ship.getSize()-1] = ship
-
-        //let variable = startPos.split(startPos[0])
-        // if (orientation == 'V' || orientation == 'v'){
-        //     for (let i = 0; i < ship.getSize(); i++) {
-        //         fleet[ship.getSize()-1][i] = String.fromCharCode(startPos.charCodeAt(0) + i) + variable[1]
-        //     }
-        // } else {
-        //     for (let i = 0; i < ship.getSize(); i++) {
-        //         fleet[ship.getSize()-1][i] = startPos[0] + String(Number(variable[1]+i))
-        //     }
-        // }
     }
 
     /**
@@ -285,21 +307,19 @@ class Player {
         for (let i = 1; i <= this.m_numShips; i++) {
             //The prompting for a choice will change depending on how we decide to do it
             let cochoice = prompt("For ship #" + i + ", what coordinate would you like it to start: ") //asks for coordinates
+            cochoice = cochoice.toUpperCase()
             let orchoice = prompt("\nWhat orientation ('V' for vertical 'H' for horizontal) would you like for this ship: ") //asks for orientation
-            //need to add prompt for either vertical or horizontal
-            //need to add checks to make sure the input is in the right format (what is the format we want coming in?)
-            //I think we can remove the checks in this method that check if the placement is valid as that is done in the gameboard class
-            //call the gameBoard place ship and if that's true then call the ships which returns the body and places it in the fleet
             let valid = false
             while (valid === false) {
                 let temp = new Ship(i)
                 temp.setPosition(cochoice, orchoice)
-                if (this.m_otherPlayerBoard.placeShip(temp, cochoice, orchoice)){
+                if (isValidCode(cochoice) && this.m_otherPlayerBoard.placeShip(temp, cochoice, orchoice)){
                     this.addToFleet(temp)
                     valid = true
                 }
                 else{
                     cochoice = prompt("\nTry Again! For ship #" + i + ", what coordinate would you like it to start: ")
+                    cochoice = cochoice.toUpperCase();
                     orchoice = prompt("\nWhat orientation('V' for vertical 'H' for horizontal) would you like for this ship: ")
                 }
                 //The following just seperates the letter and numbers in the choice i.e. B10 just becomes 10, can still access the letter
@@ -318,24 +338,39 @@ class Player {
     takeATurn() {
         //The prompting for a choice will change depending on how we decide to do it
         let choice = prompt("What's your guess?: ")
+        choice = choice.toUpperCase();
         let tookATurn = false
-        while(tookATurn = false){
+        while(tookATurn == false){
             if (isValidCode(choice)){
-                if (this.m_otherPlayerBoard.isAHit(choice)){
-                    console.log("\nIt was a hit!\n") 
-                    //Have function that determines if a battleship has been sunken
-                    if (this.m_otherPlayerBoard.checkIfAllHit()){
-                        console.log("\nCongratulations, " + this.m_name + "! You have sunk all your enemy's battleships! You won!\n")
+                if (this.m_otherPlayerBoard.isAlreadyShot(choice)) {
+                    choice = prompt("What's your guess?: ")
+                    choice = choice.toUpperCase();
+                    tookATurn = false
+                } else {
+                    if (this.m_otherPlayerBoard.isAHit(choice)){
+                    
+                        console.log("\nIt was a hit!\n")
+                        tookATurn = true
+                        let holder = this.checkFleet(choice);
+                    
+                        if(holder.isSunk()){
+                            console.log("Player '" + this.m_name + "' sank opponent's: " + holder.getSize() + " length ship!\n")
+                        }
+
+                        if (this.m_otherPlayerBoard.checkIfAllHit()){
+                            console.log("\nCongratulations, " + this.m_name + "! You have sunk all your enemy's battleships! You won!\n")
+                        }
+                    }  else{
+                        console.log("\nYou missed!\n")
+                        tookATurn = true
                     }
+                
                 }
-                else{
-                    console.log("\nYou missed!\n")
-                }
-                tookATurn = true
             }
             else {
-                console.log("\nERROR: The coordinate you input was wrong. Try again: .\n")
+                console.log("\nERROR: The coordinate you input was wrong. Try again!\n")
                 choice = prompt("What's your guess?: ")
+                choice = choice.toUpperCase()
             }
         }
     }
@@ -349,32 +384,20 @@ class Player {
     }
 }
 
-// let Ship1 = new Ship(1);
-// let Ship2 = new Ship(2);
-// let board = new Gameboard();
-// let place = board.placeShip(Ship1, 'A 5');
-// if(place[0]===true){
-//     Ship1.setPosition(place[1]);
-// }
-// place = board.placeShip(Ship2, 'A 6');
-// if(place[0]===true){
-//     Ship2.setPosition(place[1]);
-// }
-// console.log(board.m_testBoard);
-// console.log(board.isAHit('A 1'));
 
 
 //Let's start the game from here
 
 //This part will change depending on how we prompt the users
 let play1 = prompt("Player1, what is your name?: ")
-let play2 = prompt("Player2, what is your name? :")
+let play2 = prompt("Player2, what is your name?: ")
 console.log("Let's play BattleShip!\n")
 console.log("Depending on how many ships you pick, the type of ships you have will differ. You can choose between 1 to 6 ships.\n")
 console.log("If you choose 1 ship, you will get 1 ship of 1x1. If you choose 2 ships, you will get 1 ship that is 1x1 and another that is 1x2 and so on.\n")
 let numShips = prompt("How many ships will both players have? ")
+numShips = Number(numShips)
 
-while (numShips <=0 || numShips > 6){
+while (numShips <=0 || numShips > 6 || isNaN(numShips)){
     numShips = prompt('\nYou gave an invalid amount of ships. Try again: ')
 }
 
@@ -401,13 +424,6 @@ while(!Player1.hasWon() && !Player2.hasWon()) {
         Player2.takeATurn()
     }
     i++
-    if (Player1.hasWon()) {
-        console.log('\nCongratulations! ' + Player2.m_name + " has won!\n")
-        break;
-      } else if(Player2.hasWon()){
-        console.log('\nCongratulations! ' + Player2.m_name + " has won!\n")
-        break;
-      }
 }
 
 //Game End Message
