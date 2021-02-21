@@ -308,7 +308,18 @@ class Player {
             //The prompting for a choice will change depending on how we decide to do it
             let cochoice = prompt("For ship #" + i + ", what coordinate would you like it to start: ") //asks for coordinates
             cochoice = cochoice.toUpperCase()
-            let orchoice = prompt("\nWhat orientation ('V' for vertical 'H' for horizontal) would you like for this ship: ") //asks for orientation
+            while (!isValidCode(cochoice)){
+                cochoice = prompt("\nYour coordinate is invalid. Try again: ")
+                cochoice = cochoice.toUpperCase()
+            }
+            let orchoice = prompt("\nWhat orientation ('V' for vertical(Vertical upwards) 'H' for horizontal) would you like for this ship: ") //asks for orientation
+            while ((orchoice != 'H' && orchoice != 'h') && (orchoice != 'V' && orchoice != 'v')){
+                orchoice = prompt("\nYour choice of orientation was invalid. Try again: ")
+            }
+            //need to add prompt for either vertical or horizontal
+            //need to add checks to make sure the input is in the right format (what is the format we want coming in?)
+            //I think we can remove the checks in this method that check if the placement is valid as that is done in the gameboard class
+            //call the gameBoard place ship and if that's true then call the ships which returns the body and places it in the fleet
             let valid = false
             while (valid === false) {
                 let temp = new Ship(i)
