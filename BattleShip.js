@@ -212,18 +212,23 @@ class Ship{
      * @returns none
      * @param {string} startPos starting position of ship
      */
-    setPosition(startPos, orientation) {
+    setPosition(startPos, orientation, turn) {
         startPos = startPos.toString()
         orientation = orientation.toString()
         let arr = startPos.split(startPos[0]);
         let letterASCII = startPos[0].charCodeAt(0);
         let id;
-        let cell;
 
         if (orientation === 'H' || orientation === 'h'){
             for (let i = 0; i < this.m_size; i++){
                 this.m_body[i] = String.fromCharCode(letterASCII + i) + Number(arr[1]);
-                id = String.fromCharCode(letterASCII + i) + Number(arr[1]);
+                if(turn == 1) {
+                    //console.log("here C")
+                    id = 'c' + String.fromCharCode(letterASCII + i) + Number(arr[1]);
+                } else {
+                    //console.log("here")
+                    id = 'o' + String.fromCharCode(letterASCII + i) + Number(arr[1]);
+                }
                 document.getElementById(id.toString()).style['background-color'] = "black";
             }
         } else {
@@ -306,7 +311,7 @@ class Player {
      * @description allows other player to place ships, I.E. player1's board is in player2's class
      * @returns true if ship placed
      * */
-    setBattleShips() {
+    setBattleShips(player) {
         console.log("Welcome " + this.m_name + "! Let's have the other player set up their battleship!\n")
         for (let i = 1; i <= this.m_numShips; i++) {
             //The prompting for a choice will change depending on how we decide to do it
@@ -329,7 +334,7 @@ class Player {
                 let temp = new Ship(i)
  
                 if (isValidCode(cochoice) && this.m_otherPlayerBoard.placeShip(temp, cochoice, orchoice)){
-                    temp.setPosition(cochoice, orchoice)
+                    temp.setPosition(cochoice, orchoice, player)
                     this.addToFleet(temp)
                     valid = true
                 }
@@ -424,8 +429,8 @@ while (numShips <=0 || numShips > 6 || isNaN(numShips)){
 let Player1 = new Player(numShips,play1)
 let Player2 = new Player(numShips, play2)
 
-Player1.setBattleShips()
-Player2.setBattleShips()
+Player1.setBattleShips(1)
+Player2.setBattleShips(2)
 
 console.log(Player1.m_otherPlayerBoard);
 console.log(Player2.m_otherPlayerBoard);
