@@ -1,6 +1,8 @@
 /**
- * THIS IS ALL JUST BRAINSTORMING!! FEEL FREE TO REJECT OR IMPROVE ON THE IDEAS
- */
+     * @description checks input format
+     * @returns true if the input is correct, false othetwise
+     * @param {string} code the input given by user
+     */
 function isValidCode(code){
     code = code.toString()
     let num = code.split(code[0])
@@ -8,7 +10,7 @@ function isValidCode(code){
     let less10 = (num > 0 && num < 11)
     return ((/^[A-J]\d+$/.test(code)) && less10);
 }
-//const prompt = require('prompt-sync')();
+//const prompt = require('prompt-sync')(); used for console testing
 const mapper = {
     A: 0,
     B: 1,
@@ -287,6 +289,11 @@ class Ship{
         return false;
     }
 
+    /**
+     * @description Hides the ships from the non-active player
+     * @returns none
+     * @param {number} player whose turn it is to determine what board to change
+     */
     hide(player) {
         console.log("Hidden")
         let marked 
@@ -312,6 +319,11 @@ class Ship{
         
     }
 
+    /**
+     * @description Shows the ships from the active player
+     * @returns none
+     * @param {number} player whose turn it is to determine what board to change
+     */
     show(player){
         let marked 
         let arr;
@@ -419,15 +431,17 @@ class Player {
                     cochoice = cochoice.toUpperCase();
                     orchoice = window.prompt("\nWhat orientation('V' for vertical 'H' for horizontal) would you like for this ship: ")
                 }
-                //The following just seperates the letter and numbers in the choice i.e. B10 just becomes 10, can still access the letter
-                //let ch = cochoice.split(cochoice[0])
-                //ch = parseInt(ch[1],10) //The second element is just the numbers, this turns it into numbers intead of strings
             }
  
         }
 
     }
 
+    /**
+     * @description calls hide ships on each ship in fleet array
+     * @returns none
+     * @param {number} player whose not currently active player
+     */
     hideShips(player) {
         
         for(let i = 0; i < this.m_numShips; i++) {
@@ -436,6 +450,11 @@ class Player {
         }
     }
 
+    /**
+     * @description calls show ships on each ship in fleet array
+     * @returns none
+     * @param {number} player whose turn is coming up
+     */
     showShips(player) {
         for(let i = 0; i < this.m_numShips; i++) {
             this.m_fleet[i].show(player);
@@ -446,16 +465,17 @@ class Player {
      * @description prompts player for a position and calls Gameboard's isAHit(), then calls checkIfAllHit()
      * @returns returns a message that is then displayed to the player, message says what there hit was and if they have won that is also printed out
      */
-    takeATurn(player) {
+    takeATurn(player, choice) {
         //The prompting for a choice will change depending on how we decide to do it
         //console.log(this.m_fleet)
-        let choice = window.prompt("What's your guess?: ")
+        //let choice = window.prompt("What's your guess?: ")
+        console.log(choice)
         choice = choice.toUpperCase();
         let tookATurn = false
         while(tookATurn == false){
             if (isValidCode(choice)){
                 if (this.m_otherPlayerBoard.isAlreadyShot(choice)) {
-                    choice = window.prompt("What's your guess?: ")
+                    //choice = window.prompt("What's your guess?: ")
                     choice = choice.toUpperCase();
                     tookATurn = false
                 } else {
@@ -505,56 +525,59 @@ class Player {
 //This part will change depending on how we prompt the users
 
 class Game {
+    /**
+     * @constructor
+     * @description this constructor is called to start the game
+     * @returns none
+     */
+    constructor() {
+        let play1 = window.prompt("Player1, what is your name?: ")
+        let play2 = window.prompt("Player2, what is your name?: ")
+        console.log("Let's play BattleShip!\n")
+        console.log("Depending on how many ships you pick, the type of ships you have will differ. You can choose between 1 to 6 ships.\n")
+        console.log("If you choose 1 ship, you will get 1 ship of 1x1. If you choose 2 ships, you will get 1 ship that is 1x1 and another that is 1x2 and so on.\n")
+        let numShips = window.prompt("How many ships will both players have? ")
+        numShips = Number(numShips)
 
-constructor() {
-let play1 = window.prompt("Player1, what is your name?: ")
-let play2 = window.prompt("Player2, what is your name?: ")
-console.log("Let's play BattleShip!\n")
-console.log("Depending on how many ships you pick, the type of ships you have will differ. You can choose between 1 to 6 ships.\n")
-console.log("If you choose 1 ship, you will get 1 ship of 1x1. If you choose 2 ships, you will get 1 ship that is 1x1 and another that is 1x2 and so on.\n")
-let numShips = window.prompt("How many ships will both players have? ")
-numShips = Number(numShips)
+        while (numShips <=0 || numShips > 6 || isNaN(numShips)){
+            numShips = window.prompt('\nYou gave an invalid amount of ships. Try again: ')
+        }
 
-while (numShips <=0 || numShips > 6 || isNaN(numShips)){
-    numShips = window.prompt('\nYou gave an invalid amount of ships. Try again: ')
-}
+        let Player1 = new Player(numShips,play1)
+        let Player2 = new Player(numShips, play2)
 
-let Player1 = new Player(numShips,play1)
-let Player2 = new Player(numShips, play2)
+        Player1.setBattleShips(1)
+        Player1.hideShips(1);
+        Player2.setBattleShips(2)
+        Player2.hideShips(2);
 
-Player1.setBattleShips(1)
-Player1.hideShips(1);
-Player2.setBattleShips(2)
-Player2.hideShips(2);
+        //console.log(Player1.m_otherPlayerBoard);
+        //console.log(Player2.m_otherPlayerBoard);
 
-//console.log(Player1.m_otherPlayerBoard);
-//console.log(Player2.m_otherPlayerBoard);
-
-//This is the game. Each Player Takes turns
-let i = 1
-while(!Player1.hasWon() && !Player2.hasWon()) {
-    if (i%2 == 1 ){
-        console.log("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
+        //This is the game. Each Player Takes turns
+        let i = 1
+                
         //Are we showing Player1's board here so they can see where they've been hit?
         Player2.showShips(1)
-        Player1.takeATurn(1);
-        Player2.hideShips(2)
+        document.getElementById("confirmInput").addEventListener('click' , function() {
+            if(i%2 == 1) {
+                console.log("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
+                Player1.takeATurn(1, document.querySelector('#input').value);
+                Player2.hideShips(2)
+                Player1.showShips(2)
+            } else {
+                console.log("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
+                Player2.takeATurn(2, document.querySelector('#input').value)
+                Player1.hideShips(1)
+                Player2.showShips(1)
+            }
+            i++
+        })
+      
     }
-    else{
-        console.log("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
-        //Are we showing Player1's board here so they can see where they've been hit?
-        Player1.showShips(2)
-        Player2.takeATurn(2)
-        Player1.hideShips(1)
-    }
-    i++
-}
-}
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-    
-});
+
 
 window.addEventListener("load", () => {
     let start = new Game();
