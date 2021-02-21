@@ -8,7 +8,7 @@ function isValidCode(code){
     let less10 = (num > 0 && num < 11)
     return ((/^[A-J]\d+$/.test(code)) && less10);
 }
-const prompt = require('prompt-sync')();
+//const prompt = require('prompt-sync')();
 const mapper = {
     A: 0,
     B: 1,
@@ -217,10 +217,14 @@ class Ship{
         orientation = orientation.toString()
         let arr = startPos.split(startPos[0]);
         let letterASCII = startPos[0].charCodeAt(0);
+        let id;
+        let cell;
 
         if (orientation === 'H' || orientation === 'h'){
             for (let i = 0; i < this.m_size; i++){
                 this.m_body[i] = String.fromCharCode(letterASCII + i) + Number(arr[1]);
+                id = String.fromCharCode(letterASCII + i) + Number(arr[1]);
+                document.getElementById(id.toString()).style['background-color'] = "black";
             }
         } else {
             for (let i = 0; i < this.m_size; i++){
@@ -306,15 +310,15 @@ class Player {
         console.log("Welcome " + this.m_name + "! Let's have the other player set up their battleship!\n")
         for (let i = 1; i <= this.m_numShips; i++) {
             //The prompting for a choice will change depending on how we decide to do it
-            let cochoice = prompt("For ship #" + i + ", what coordinate would you like it to start: ") //asks for coordinates
+            let cochoice = window.prompt("For ship #" + i + ", what coordinate would you like it to start: ") //asks for coordinates
             cochoice = cochoice.toUpperCase()
             while (!isValidCode(cochoice)){
-                cochoice = prompt("\nYour coordinate is invalid. Try again: ")
+                cochoice = window.prompt("\nYour coordinate is invalid. Try again: ")
                 cochoice = cochoice.toUpperCase()
             }
-            let orchoice = prompt("\nWhat orientation ('V' for vertical(Vertical upwards) 'H' for horizontal) would you like for this ship: ") //asks for orientation
+            let orchoice = window.prompt("\nWhat orientation ('V' for vertical(Vertical upwards) 'H' for horizontal) would you like for this ship: ") //asks for orientation
             while ((orchoice != 'H' && orchoice != 'h') && (orchoice != 'V' && orchoice != 'v')){
-                orchoice = prompt("\nYour choice of orientation was invalid. Try again: ")
+                orchoice = window.prompt("\nYour choice of orientation was invalid. Try again: ")
             }
             //need to add prompt for either vertical or horizontal
             //need to add checks to make sure the input is in the right format (what is the format we want coming in?)
@@ -323,15 +327,16 @@ class Player {
             let valid = false
             while (valid === false) {
                 let temp = new Ship(i)
-                temp.setPosition(cochoice, orchoice)
+ 
                 if (isValidCode(cochoice) && this.m_otherPlayerBoard.placeShip(temp, cochoice, orchoice)){
+                    temp.setPosition(cochoice, orchoice)
                     this.addToFleet(temp)
                     valid = true
                 }
                 else{
-                    cochoice = prompt("\nTry Again! For ship #" + i + ", what coordinate would you like it to start: ")
+                    cochoice = window.prompt("\nTry Again! For ship #" + i + ", what coordinate would you like it to start: ")
                     cochoice = cochoice.toUpperCase();
-                    orchoice = prompt("\nWhat orientation('V' for vertical 'H' for horizontal) would you like for this ship: ")
+                    orchoice = window.prompt("\nWhat orientation('V' for vertical 'H' for horizontal) would you like for this ship: ")
                 }
                 //The following just seperates the letter and numbers in the choice i.e. B10 just becomes 10, can still access the letter
                 //let ch = cochoice.split(cochoice[0])
@@ -348,13 +353,13 @@ class Player {
      */
     takeATurn() {
         //The prompting for a choice will change depending on how we decide to do it
-        let choice = prompt("What's your guess?: ")
+        let choice = window.prompt("What's your guess?: ")
         choice = choice.toUpperCase();
         let tookATurn = false
         while(tookATurn == false){
             if (isValidCode(choice)){
                 if (this.m_otherPlayerBoard.isAlreadyShot(choice)) {
-                    choice = prompt("What's your guess?: ")
+                    choice = window.prompt("What's your guess?: ")
                     choice = choice.toUpperCase();
                     tookATurn = false
                 } else {
@@ -380,7 +385,7 @@ class Player {
             }
             else {
                 console.log("\nERROR: The coordinate you input was wrong. Try again!\n")
-                choice = prompt("What's your guess?: ")
+                choice = window.prompt("What's your guess?: ")
                 choice = choice.toUpperCase()
             }
         }
@@ -400,16 +405,20 @@ class Player {
 //Let's start the game from here
 
 //This part will change depending on how we prompt the users
-let play1 = prompt("Player1, what is your name?: ")
-let play2 = prompt("Player2, what is your name?: ")
+
+class Game {
+
+constructor() {
+let play1 = window.prompt("Player1, what is your name?: ")
+let play2 = window.prompt("Player2, what is your name?: ")
 console.log("Let's play BattleShip!\n")
 console.log("Depending on how many ships you pick, the type of ships you have will differ. You can choose between 1 to 6 ships.\n")
 console.log("If you choose 1 ship, you will get 1 ship of 1x1. If you choose 2 ships, you will get 1 ship that is 1x1 and another that is 1x2 and so on.\n")
-let numShips = prompt("How many ships will both players have? ")
+let numShips = window.prompt("How many ships will both players have? ")
 numShips = Number(numShips)
 
 while (numShips <=0 || numShips > 6 || isNaN(numShips)){
-    numShips = prompt('\nYou gave an invalid amount of ships. Try again: ')
+    numShips = window.prompt('\nYou gave an invalid amount of ships. Try again: ')
 }
 
 let Player1 = new Player(numShips,play1)
@@ -436,6 +445,18 @@ while(!Player1.hasWon() && !Player2.hasWon()) {
     }
     i++
 }
+}
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+    
+});
+
+window.addEventListener("load", () => {
+    let start = new Game();
+});
+
+
 
 //Game End Message
 
