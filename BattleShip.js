@@ -583,7 +583,5 @@ window.addEventListener("load", () => {
     let start = new Game();
 });
 
-
-
 //Game End Message
 
