@@ -383,7 +383,7 @@ console.log("Depending on how many ships you pick, the type of ships you have wi
 console.log("If you choose 1 ship, you will get 1 ship of 1x1. If you choose 2 ships, you will get 1 ship that is 1x1 and another that is 1x2 and so on.\n")
 let numShips = prompt("How many ships will both players have? ")
 
-while (numShips <=0 || numShips > 6){
+while ((numShips <=0 || numShips > 6) && (typeof(numShips) != 'number')){
     numShips = prompt('\nYou gave an invalid amount of ships. Try again: ')
 }
 
