@@ -467,16 +467,14 @@ class Player {
      */
     takeATurn(player, choice) {
         //The prompting for a choice will change depending on how we decide to do it
-        //console.log(this.m_fleet)
-        //let choice = window.prompt("What's your guess?: ")
         console.log(choice)
         choice = choice.toUpperCase();
         let tookATurn = false
         while(tookATurn == false){
             if (isValidCode(choice)){
                 if (this.m_otherPlayerBoard.isAlreadyShot(choice)) {
-                    //choice = window.prompt("What's your guess?: ")
-                    choice = choice.toUpperCase();
+                    choice = window.prompt("What's your guess?: ")
+                    choice = choice.toUpperCase()
                     tookATurn = false
                 } else {
                     if (this.m_otherPlayerBoard.isAHit(choice, player)){
@@ -502,7 +500,7 @@ class Player {
                 }
             }
             else {
-                console.log("\nERROR: The coordinate you input was wrong. Try again!\n")
+                alert("\nERROR: The coordinate you input was wrong. Try again!\n")
                 choice = window.prompt("What's your guess?: ")
                 choice = choice.toUpperCase()
             }
@@ -559,15 +557,18 @@ class Game {
                 
         //Are we showing Player1's board here so they can see where they've been hit?
         Player2.showShips(1)
+        alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
+        alert("On your turn enter shot coordinate into input box and press confirm")
         document.getElementById("confirmInput").addEventListener('click' , function() {
             if(i%2 == 1) {
-                console.log("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
+                //console.log("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
                 Player1.takeATurn(1, document.querySelector('#input').value);
+                alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
                 Player2.hideShips(2)
                 Player1.showShips(2)
             } else {
-                console.log("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
                 Player2.takeATurn(2, document.querySelector('#input').value)
+                alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
                 Player1.hideShips(1)
                 Player2.showShips(1)
             }
