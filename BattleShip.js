@@ -10,6 +10,10 @@ function isValidCode(code){
     let less10 = (num > 0 && num < 11)
     return ((/^[A-J]\d+$/.test(code)) && less10);
 }
+
+/**
+ * * @description mapper to handle cols
+ */
 //const prompt = require('prompt-sync')(); used for console testing
 const mapper = {
     A: 0,
