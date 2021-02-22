@@ -165,7 +165,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line399">line 399</a>
+        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line400">line 400</a>
     </li></ul></dd>
     
 
@@ -322,7 +322,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line427">line 427</a>
+        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line429">line 429</a>
     </li></ul></dd>
     
 
@@ -358,7 +358,7 @@
     
 
     
-    <h4 class="name" id="checkFleet"><span class="type-signature"></span>checkFleet<span class="signature">(coord)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="checkFleet"><span class="type-signature"></span>checkFleet<span class="signature">(coord, player)</span><span class="type-signature"></span></h4>
     
 
     
@@ -422,6 +422,29 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>player</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">either a 1 or a 2 to denote active player</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -459,7 +482,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line412">line 412</a>
+        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line414">line 414</a>
     </li></ul></dd>
     
 
@@ -557,7 +580,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line545">line 545</a>
+        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line552">line 552</a>
     </li></ul></dd>
     
 
@@ -704,7 +727,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line475">line 475</a>
+        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line478">line 478</a>
     </li></ul></dd>
     
 
@@ -750,7 +773,7 @@
     
 
     
-    <h4 class="name" id="setBattleShips"><span class="type-signature"></span>setBattleShips<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setBattleShips"><span class="type-signature"></span>setBattleShips<span class="signature">(player)</span><span class="type-signature"></span></h4>
     
 
     
@@ -758,7 +781,7 @@
 
 
 <div class="description">
-    allows other player to place ships, I.E. player1's board is in player2's class
+    allows other player to place ships, I.E. player1's board is in player2's class, this is where ships are created, also adds to fleet array
 </div>
 
 
@@ -767,6 +790,55 @@
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>player</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">either a 1 or a 2 to denote active player, this is just being passed through</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -802,7 +874,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line435">line 435</a>
+        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line438">line 438</a>
     </li></ul></dd>
     
 
@@ -949,7 +1021,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line488">line 488</a>
+        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line491">line 491</a>
     </li></ul></dd>
     
 
@@ -995,7 +1067,7 @@
     
 
     
-    <h4 class="name" id="takeATurn"><span class="type-signature"></span>takeATurn<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="takeATurn"><span class="type-signature"></span>takeATurn<span class="signature">(player, choice)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1003,7 +1075,7 @@
 
 
 <div class="description">
-    prompts player for a position and calls Gameboard's isAHit(), then calls checkIfAllHit()
+    prompts player for a position and calls Gameboard's isAHit(), then calls checkIfAllHit(), if a player wins it says and then reloads
 </div>
 
 
@@ -1012,6 +1084,78 @@
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>player</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">whose shooting</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>choice</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">shot coordinate</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -1047,7 +1191,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line498">line 498</a>
+        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line503">line 503</a>
     </li></ul></dd>
     
 
@@ -1109,7 +1253,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sun Feb 21 2021 18:46:19 GMT-0600 (Central Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sun Feb 21 2021 22:21:31 GMT-0600 (Central Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -40,7 +40,7 @@ function isValidCode(code){
 }
 
 /**
- * * @description mapper to handle cols
+ *  @description mapper to handle cols
  */
 //const prompt = require('prompt-sync')(); used for console testing
 const mapper = {
@@ -108,7 +108,7 @@ class Gameboard {
     } //Check if ship out of bound or not
 
     /**
-     * @description places a ship inside of the ship array
+     * @description places a ship inside of the board array
      * @param {string} coord starting coord of the ship
      * @param {object} ship must pass in ship to be placed
      * @param {string} orientation must pass in either vertical or horizontal to orient ship
@@ -153,8 +153,9 @@ class Gameboard {
     }
 
     /**
+     * @description checks to see if the fired shot is a hit on the board, marks misses on the board
      * @param {string} coord coordinates the other playes will provide
-     * @returns returns true if the positon holds an 'S', false otherwise, if true, calls Ship's hit function
+     * @returns returns true if the positon holds an 'S', false otherwise (and adds white space to board css), if true, calls Ship's hit function
      */
     isAHit(coord, player) {
         coord = coord.toString();
@@ -277,7 +278,7 @@ class Ship{
     */
 
     /**
-     * @description places the coordinates in the ship body starting at the initial coordinate
+     * @description places the coordinates in the ship body starting at the initial coordinate, also adds css styling for ship on board
      * @returns none
      * @param {string} startPos starting position of ship
      */
@@ -317,7 +318,7 @@ class Ship{
     }
 
     /**
-     * @description replaces 'O' with 'X' in m_body n relation to position, used to see if this ship has the shot coord in the fleet
+     * @description replaces 'O' with 'X' in m_body n relation to position, used to see if this ship has the shot coord in the fleet, puts red mark on board
      * @param {string} marked position where m_body is to be hit
      * @returns true if this ship is hit false if not
      */
@@ -436,6 +437,7 @@ class Player {
      * @description checks all of the ships in the players fleet to find one that was hit
      * @returns returns ship object that had coordinate in it that was hit
      * @param {string} coord coord to be hit
+     * @param {number} player either a 1 or a 2 to denote active player
      */
     checkFleet(coord, player) {
         for (let i = 0; i &lt; this.m_numShips; i++) {
@@ -457,8 +459,9 @@ class Player {
     }
 
     /**
-     * @description allows other player to place ships, I.E. player1's board is in player2's class
+     * @description allows other player to place ships, I.E. player1's board is in player2's class, this is where ships are created, also adds to fleet array
      * @returns true if ship placed
+     * @param {number} player either a 1 or a 2 to denote active player, this is just being passed through
      * */
     setBattleShips(player) {
         window.alert("Welcome " + this.m_name + "! Let's have the other player set up their battleship!\n")
@@ -520,8 +523,10 @@ class Player {
     }
 
     /**
-     * @description prompts player for a position and calls Gameboard's isAHit(), then calls checkIfAllHit()
+     * @description prompts player for a position and calls Gameboard's isAHit(), then calls checkIfAllHit(), if a player wins it says and then reloads
      * @returns returns a message that is then displayed to the player, message says what there hit was and if they have won that is also printed out
+     * @param {number} player whose shooting
+     * @param {string} choice shot coordinate
      */
     takeATurn(player, choice) {
         //The prompting for a choice will change depending on how we decide to do it
@@ -547,7 +552,9 @@ class Player {
                         }
 
                         if (this.m_otherPlayerBoard.checkIfAllHit()){
-                            window.alert("\nCongratulations, " + this.m_name + "! You have sunk all your enemy's battleships! You won!\n")
+                            window.alert("\nCongratulations, " + this.m_name + "! You have sunk all your enemy's battleships! You won! Reload to play again!\n")
+                            //object.reload(forcedReload)
+                            window.location.reload() //forces page to reload on win so the game ends
                         }
                     }  else{
                         window.alert("\nYou missed!\n")
@@ -584,7 +591,7 @@ class Player {
 class Game {
     /**
      * @constructor
-     * @description this constructor is called to start the game
+     * @description this constructor is called to start the game, facilitates game setup and main game loop, holds event listeners for input button
      * @returns none
      */
     constructor() {
@@ -639,7 +646,9 @@ class Game {
 }
 
 
-
+/**
+ * @description event listener callback that makes sure the page is loaded before the game starts
+ */
 window.addEventListener("load", () => {
     let start = new Game();
 });
@@ -662,7 +671,7 @@ window.addEventListener("load", () => {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sun Feb 21 2021 18:46:19 GMT-0600 (Central Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sun Feb 21 2021 22:21:31 GMT-0600 (Central Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
