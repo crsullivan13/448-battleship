@@ -44,7 +44,7 @@ class Gameboard {
             }
         }
 
-        //console.log(this.m_testBoard); //for testing
+        //window.alert(this.m_testBoard); //for testing
     }
 
     /**
@@ -58,7 +58,7 @@ class Gameboard {
         let outOfBound = true
         let letterASCII = coordinate[0].charCodeAt(0)
         coord = parseInt(coord[1],10)
-        //console.log(coord);
+        //window.alert(coord);
         if (orientation == 'H' || orientation == 'h'){ //I'm assuming that columns are A-J. This only works for capital letters
             if (letterASCII >=65 && letterASCII <=74){
                 if (letterASCII + ship.getSize() <=75){  //74 is not a typo
@@ -93,12 +93,12 @@ class Gameboard {
             // whether a ship is already there on the coord
             if (orientation === 'V' || orientation === 'v') { //I changed vertical to 'V' or 'v' in other function
               if(this.m_testBoard[colNum + i][Number(mapper[row])] === 'S'){
-                console.log("Invalid ship placement: Overlap")
+                window.alert("Invalid ship placement: Overlap")
                 return false
               }
             } else if(this.m_testBoard[colNum][Number(mapper[row]) + i] === 'S'){
-              console.log("Invalid ship placement: Overlap")
-              //console.log(this.m_testBoard)
+              window.alert("Invalid ship placement: Overlap")
+              //window.alert(this.m_testBoard)
               return false
             }
           }
@@ -114,7 +114,7 @@ class Gameboard {
           }
           
         } else {
-            console.log("Invalid ship placement: Off board");
+            window.alert("Invalid ship placement: Off board");
             return false;
         }
         return true;
@@ -144,7 +144,7 @@ class Gameboard {
               id = 'o' + String.fromCharCode(letterASCII) + Number(arr[1]);
           }
           document.getElementById(id.toString()).style['background-color'] = "white";
-          //console.log("You Missed!\n")
+          //window.alert("You Missed!\n")
           return false
         }
     }
@@ -161,7 +161,7 @@ class Gameboard {
         const colNum = Number(arr[1]) - 1;
 
         if(this.m_testBoard[colNum][Number(mapper[row])] === 'M' || this.m_testBoard[colNum][Number(mapper[row])] === 'X') {
-            console.log("You've already shot at this location! Try again!\n");
+            window.alert("You've already shot at this location! Try again!\n");
             return true;
         }
         return false;
@@ -234,10 +234,10 @@ class Ship{
             for (let i = 0; i < this.m_size; i++){
                 this.m_body[i] = String.fromCharCode(letterASCII + i) + Number(arr[1]);
                 if(turn == 1) {
-                    //console.log("here C")
+                    //window.alert("here C")
                     id = 'c' + String.fromCharCode(letterASCII + i) + Number(arr[1]);
                 } else {
-                    //console.log("here")
+                    //window.alert("here")
                     id = 'o' + String.fromCharCode(letterASCII + i) + Number(arr[1]);
                 }
                 document.getElementById(id.toString()).style['background-color'] = "black";
@@ -246,10 +246,10 @@ class Ship{
             for (let i = 0; i < this.m_size; i++){
                 this.m_body[i] = startPos[0] +  (Number(arr[1]) + i);
                 if(turn == 1) {
-                    //console.log("here C")
+                    //window.alert("here C")
                     id = 'c' + String.fromCharCode(letterASCII) + (Number(arr[1])+i);
                 } else {
-                    //console.log("here")
+                    //window.alert("here")
                     id = 'o' + String.fromCharCode(letterASCII) + (Number(arr[1])+i);
                 }
                 document.getElementById(id.toString()).style['background-color'] = "black";
@@ -275,10 +275,10 @@ class Ship{
                 this.m_health--;
                 console.log(this.m_body);
                 if(player == 1) {
-                    //console.log("here C")
+                    //window.alert("here C")
                     id = 'c' + String.fromCharCode(letterASCII) + Number(arr[1]);
                 } else {
-                    //console.log("here")
+                    //window.alert("here")
                     id = 'o' + String.fromCharCode(letterASCII) + Number(arr[1]);
                 }
                 document.getElementById(id.toString()).style['background-color'] = "red";
@@ -307,10 +307,10 @@ class Ship{
                 arr = marked.split(marked[0]);
                 letterASCII = marked[0].charCodeAt(0);
                 if(player == 1) {
-                    //console.log("here C")
+                    //window.alert("here C")
                     id = 'c' + String.fromCharCode(letterASCII) + (Number(arr[1]));
                 } else {
-                    //console.log("here")
+                    //window.alert("here")
                     id = 'o' + String.fromCharCode(letterASCII) + (Number(arr[1]));
                 }
                 document.getElementById(id.toString()).style['background-color'] = "rgb(26,102,153)";
@@ -335,10 +335,10 @@ class Ship{
                 arr = marked.split(marked[0]);
                 letterASCII = marked[0].charCodeAt(0);
                 if(player == 1) {
-                    //console.log("here C")
+                    //window.alert("here C")
                     id = 'o' + String.fromCharCode(letterASCII) + (Number(arr[1]));
                 } else {
-                    //console.log("here")
+                    //window.alert("here")
                     id = 'c' + String.fromCharCode(letterASCII) + (Number(arr[1]));
                 }
                 document.getElementById(id.toString()).style['background-color'] = "black";
@@ -403,7 +403,7 @@ class Player {
      * @returns true if ship placed
      * */
     setBattleShips(player) {
-        console.log("Welcome " + this.m_name + "! Let's have the other player set up their battleship!\n")
+        window.alert("Welcome " + this.m_name + "! Let's have the other player set up their battleship!\n")
         for (let i = 1; i <= this.m_numShips; i++) {
             //The prompting for a choice will change depending on how we decide to do it
             let cochoice = window.prompt("For ship #" + i + ", what coordinate would you like it to start: ") //asks for coordinates
@@ -467,7 +467,7 @@ class Player {
      */
     takeATurn(player, choice) {
         //The prompting for a choice will change depending on how we decide to do it
-        //console.log(this.m_fleet)
+        //window.alert(this.m_fleet)
         //let choice = window.prompt("What's your guess?: ")
         console.log(choice)
         choice = choice.toUpperCase();
@@ -481,19 +481,19 @@ class Player {
                 } else {
                     if (this.m_otherPlayerBoard.isAHit(choice, player)){
                     
-                        console.log("\nIt was a hit!\n")
+                        window.alert("\nIt was a hit!\n")
                         tookATurn = true
                         let holder = this.checkFleet(choice, player);
                     
                         if(holder.isSunk()){
-                            console.log("Player '" + this.m_name + "' sank opponent's: " + holder.getSize() + " length ship!\n")
+                            window.alert("Player '" + this.m_name + "' sank opponent's: " + holder.getSize() + " length ship!\n")
                         }
 
                         if (this.m_otherPlayerBoard.checkIfAllHit()){
-                            console.log("\nCongratulations, " + this.m_name + "! You have sunk all your enemy's battleships! You won!\n")
+                            window.alert("\nCongratulations, " + this.m_name + "! You have sunk all your enemy's battleships! You won!\n")
                         }
                     }  else{
-                        console.log("\nYou missed!\n")
+                        window.alert("\nYou missed!\n")
                         console.log("monke")
                         this.checkFleet(choice, player)
                         tookATurn = true
@@ -502,7 +502,7 @@ class Player {
                 }
             }
             else {
-                console.log("\nERROR: The coordinate you input was wrong. Try again!\n")
+                window.alert("\nERROR: The coordinate you input was wrong. Try again!\n")
                 choice = window.prompt("What's your guess?: ")
                 choice = choice.toUpperCase()
             }
@@ -533,9 +533,9 @@ class Game {
     constructor() {
         let play1 = window.prompt("Player1, what is your name?: ")
         let play2 = window.prompt("Player2, what is your name?: ")
-        console.log("Let's play BattleShip!\n")
-        console.log("Depending on how many ships you pick, the type of ships you have will differ. You can choose between 1 to 6 ships.\n")
-        console.log("If you choose 1 ship, you will get 1 ship of 1x1. If you choose 2 ships, you will get 1 ship that is 1x1 and another that is 1x2 and so on.\n")
+        window.alert("Let's play BattleShip!\n")
+        window.alert("Depending on how many ships you pick, the type of ships you have will differ. You can choose between 1 to 6 ships.\n")
+        window.alert("If you choose 1 ship, you will get 1 ship of 1x1. If you choose 2 ships, you will get 1 ship that is 1x1 and another that is 1x2 and so on.\n")
         let numShips = window.prompt("How many ships will both players have? ")
         numShips = Number(numShips)
 
@@ -551,8 +551,8 @@ class Game {
         Player2.setBattleShips(2)
         Player2.hideShips(2);
 
-        //console.log(Player1.m_otherPlayerBoard);
-        //console.log(Player2.m_otherPlayerBoard);
+        //window.alert(Player1.m_otherPlayerBoard);
+        //window.alert(Player2.m_otherPlayerBoard);
 
         //This is the game. Each Player Takes turns
         let i = 1
@@ -561,12 +561,12 @@ class Game {
         Player2.showShips(1)
         document.getElementById("confirmInput").addEventListener('click' , function() {
             if(i%2 == 1) {
-                console.log("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
+                window.alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
                 Player1.takeATurn(1, document.querySelector('#input').value);
                 Player2.hideShips(2)
                 Player1.showShips(2)
             } else {
-                console.log("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
+                window.alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
                 Player2.takeATurn(2, document.querySelector('#input').value)
                 Player1.hideShips(1)
                 Player2.showShips(1)
