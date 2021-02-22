@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: BattleShip.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: BattleShip.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
      * @description checks input format
      * @returns true if the input is correct, false othetwise
      * @param {string} code the input given by user
@@ -7,8 +35,8 @@ function isValidCode(code){
     code = code.toString()
     let num = code.split(code[0])
     num = parseInt(num[1],10)
-    let less10 = (num > 0 && num < 11)
-    return ((/^[A-J]\d+$/.test(code)) && less10);
+    let less10 = (num > 0 &amp;&amp; num &lt; 11)
+    return ((/^[A-J]\d+$/.test(code)) &amp;&amp; less10);
 }
 //const prompt = require('prompt-sync')(); used for console testing
 const mapper = {
@@ -34,12 +62,12 @@ class Gameboard {
         this.m_numOfShips = numShips;
         this.m_testBoard = new Array(10);
         
-        for (let i = 0; i < 10; i++){
+        for (let i = 0; i &lt; 10; i++){
             this.m_testBoard[i] = new Array(10);
         }
 
-        for (let i = 0; i < 10; i++){
-            for (let j = 0; j < 10; j++){
+        for (let i = 0; i &lt; 10; i++){
+            for (let j = 0; j &lt; 10; j++){
                 this.m_testBoard[i][j] = 'NA';
             }
         }
@@ -60,8 +88,8 @@ class Gameboard {
         coord = parseInt(coord[1],10)
         //window.alert(coord);
         if (orientation == 'H' || orientation == 'h'){ //I'm assuming that columns are A-J. This only works for capital letters
-            if (letterASCII >=65 && letterASCII <=74){
-                if (letterASCII + ship.getSize() <=75){  //74 is not a typo
+            if (letterASCII >=65 &amp;&amp; letterASCII &lt;=74){
+                if (letterASCII + ship.getSize() &lt;=75){  //74 is not a typo
                     outOfBound = false
                 }
             }
@@ -89,7 +117,7 @@ class Gameboard {
         const colNum = Number(arr[1]) - 1;
 
         if(!this.checkOutOfBound(ship, coord, orientation)){
-          for (let i = 0; i < ship.getSize(); i++){
+          for (let i = 0; i &lt; ship.getSize(); i++){
             // whether a ship is already there on the coord
             if (orientation === 'V' || orientation === 'v') { //I changed vertical to 'V' or 'v' in other function
               if(this.m_testBoard[colNum + i][Number(mapper[row])] === 'S'){
@@ -104,7 +132,7 @@ class Gameboard {
           }
 
         
-          for (let i = 0; i < ship.getSize(); i++){
+          for (let i = 0; i &lt; ship.getSize(); i++){
             if (orientation === 'V' || orientation === 'v') { //I changed vertical to 'V' or 'v' in other function
               this.m_testBoard[colNum + i][Number(mapper[row])] = 'S';
             } else {
@@ -174,8 +202,8 @@ class Gameboard {
      */
     checkIfAllHit() {
       let lost = true
-      for (let i = 0; i < 10; i++){
-          for (let j = 0; j < 10; j++){
+      for (let i = 0; i &lt; 10; i++){
+          for (let j = 0; j &lt; 10; j++){
               if (this.m_testBoard[i][j] == 'S'){
                   lost = false
               }
@@ -198,7 +226,7 @@ class Ship{
     constructor(size) {
         this.m_size = size;
         this.m_health = size;
-        for (let i = 0; i < this.m_size; i++){
+        for (let i = 0; i &lt; this.m_size; i++){
             this.m_body[i] = 'O' //'O' means that there is no hit, 'X' means there is a hit
         }
     }
@@ -224,7 +252,7 @@ class Ship{
         let arr;
         let letterASCII;
         let id;
-        for(let i = 0; i < this.m_size; i++) {
+        for(let i = 0; i &lt; this.m_size; i++) {
             
             if(this.m_body[i] == 'X'){
                 marked = (this.m_body[i]).toString();
@@ -257,7 +285,7 @@ class Ship{
         let id;
 
         if (orientation === 'H' || orientation === 'h'){
-            for (let i = 0; i < this.m_size; i++){
+            for (let i = 0; i &lt; this.m_size; i++){
                 this.m_body[i] = String.fromCharCode(letterASCII + i) + Number(arr[1]);
                 if(turn == 1) {
                     //window.alert("here C")
@@ -269,7 +297,7 @@ class Ship{
                 document.getElementById(id.toString()).style['background-color'] = "black";
             }
         } else {
-            for (let i = 0; i < this.m_size; i++){
+            for (let i = 0; i &lt; this.m_size; i++){
                 this.m_body[i] = startPos[0] +  (Number(arr[1]) + i);
                 if(turn == 1) {
                     //window.alert("here C")
@@ -295,7 +323,7 @@ class Ship{
         let letterASCII = marked[0].charCodeAt(0);
         let id;
 
-        for (let i = 0; i < this.m_size; i++) {
+        for (let i = 0; i &lt; this.m_size; i++) {
             if(this.m_body[i] === marked) {
                 this.m_body[i] = 'X';
                 this.m_health--;
@@ -326,7 +354,7 @@ class Ship{
         let arr;
         let letterASCII;
         let id;
-        for(let i = 0; i < this.m_size; i++) {
+        for(let i = 0; i &lt; this.m_size; i++) {
             
             if(this.m_body[i] != 'X'){
                 marked = (this.m_body[i]).toString();
@@ -355,7 +383,7 @@ class Ship{
         let arr;
         let letterASCII;
         let id;
-        for(let i = 0; i < this.m_size; i++) {
+        for(let i = 0; i &lt; this.m_size; i++) {
             if(this.m_body[i] !== 'X'){
                 marked = (this.m_body[i]).toString();
                 arr = marked.split(marked[0]);
@@ -406,7 +434,7 @@ class Player {
      * @param {string} coord coord to be hit
      */
     checkFleet(coord, player) {
-        for (let i = 0; i < this.m_numShips; i++) {
+        for (let i = 0; i &lt; this.m_numShips; i++) {
             if(this.m_fleet[i].checkCoords(coord)) {
                 this.m_fleet[i].hit(coord, player);
                 return this.m_fleet[i];
@@ -430,7 +458,7 @@ class Player {
      * */
     setBattleShips(player) {
         window.alert("Welcome " + this.m_name + "! Let's have the other player set up their battleship!\n")
-        for (let i = 1; i <= this.m_numShips; i++) {
+        for (let i = 1; i &lt;= this.m_numShips; i++) {
             //The prompting for a choice will change depending on how we decide to do it
             let cochoice = window.prompt("For ship #" + i + ", what coordinate would you like it to start: ") //asks for coordinates
             cochoice = cochoice.toUpperCase()
@@ -439,7 +467,7 @@ class Player {
                 cochoice = cochoice.toUpperCase()
             }
             let orchoice = window.prompt("\nWhat orientation ('V' for vertical(Vertical upwards) 'H' for horizontal) would you like for this ship: ") //asks for orientation
-            while ((orchoice != 'H' && orchoice != 'h') && (orchoice != 'V' && orchoice != 'v')){
+            while ((orchoice != 'H' &amp;&amp; orchoice != 'h') &amp;&amp; (orchoice != 'V' &amp;&amp; orchoice != 'v')){
                 orchoice = window.prompt("\nYour choice of orientation was invalid. Try again: ")
             }
 
@@ -447,7 +475,7 @@ class Player {
             while (valid === false) {
                 let temp = new Ship(i)
  
-                if (isValidCode(cochoice) && this.m_otherPlayerBoard.placeShip(temp, cochoice, orchoice)){
+                if (isValidCode(cochoice) &amp;&amp; this.m_otherPlayerBoard.placeShip(temp, cochoice, orchoice)){
                     temp.setPosition(cochoice, orchoice, player)
                     this.addToFleet(temp)
                     valid = true
@@ -470,7 +498,7 @@ class Player {
      */
     hideShips(player) {
         
-        for(let i = 0; i < this.m_numShips; i++) {
+        for(let i = 0; i &lt; this.m_numShips; i++) {
             console.log("hide")
             this.m_fleet[i].hide(player);
         }
@@ -482,7 +510,7 @@ class Player {
      * @param {number} player whose turn is coming up
      */
     showShips(player) {
-        for(let i = 0; i < this.m_numShips; i++) {
+        for(let i = 0; i &lt; this.m_numShips; i++) {
             this.m_fleet[i].show(player);
         }
     }
@@ -564,7 +592,7 @@ class Game {
         let numShips = window.prompt("How many ships will both players have? ")
         numShips = Number(numShips)
 
-        while (numShips <=0 || numShips > 6 || isNaN(numShips)){
+        while (numShips &lt;=0 || numShips > 6 || isNaN(numShips)){
             numShips = window.prompt('\nYou gave an invalid amount of ships. Try again: ')
         }
 
@@ -614,3 +642,26 @@ window.addEventListener("load", () => {
 
 //Game End Message
 
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Game.html">Game</a></li><li><a href="Gameboard.html">Gameboard</a></li><li><a href="Player.html">Player</a></li><li><a href="Ship.html">Ship</a></li></ul><h3>Global</h3><ul><li><a href="global.html#isValidCode">isValidCode</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sun Feb 21 2021 18:34:21 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
